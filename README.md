@@ -43,7 +43,7 @@
 - **Framework**: [Angular 21](https://angular.dev/) (Standalone Components, Signals architecture, `@if`/`@for` control flow)
 - **UI Components & Styling**: [Angular Material 21](https://material.angular.io/) & Angular CDK v21, Custom Glassmorphism CSS
 - **Graph & Visualizations**: [Cytoscape.js](https://js.cytoscape.org/) v3.33 & [cytoscape-dagre](https://github.com/cytoscape/cytoscape.js-dagre) layout engine
-- **Backend & Cloud Sync**: AWS Cloud Sync (Cognito Auth + API Gateway)
+- **Backend & Cloud Sync**: Cloudflare Cloud Sync (Pages Functions + KV + Google OAuth)
 - **Privacy & Security**: Oblivious HTTP (OHTTP) client relay, $k$-Anonymity pre-flight sanitizer, Anti-Sybil scorer
 - **Testing Runner**: [Vitest](https://vitest.dev/) v4 & Angular CLI Testbed
 - **State Management**: Angular `signal`, `computed`, `effect` reactive primitives
@@ -79,7 +79,7 @@ OrganizadorCursada/
 │   │   │   ├── plan.service.ts
 │   │   │   ├── career.service.ts
 │   │   │   ├── plan-sanitizer.service.ts
-│   │   │   ├── aws-sync.service.ts
+│   │   │   ├── cloud-sync.service.ts
 │   │   │   └── ... (see services catalog)
 │   │   ├── app.routes.ts       # Application routes (/home, /myWeek, /academicCalendar, /workshop)
 │   │   └── app.ts              # Root application component

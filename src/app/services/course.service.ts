@@ -6,7 +6,7 @@ import { CareerPlan, parseCareerPlanToCourses, EMPTY_CAREER_PLAN } from '../mode
 import { sanitizeCoursesByPlan, sanitizeCourseStatesMap } from '../utils/storage-sanitizer.utils';
 
 import { AuthService } from './auth.service';
-import { AwsSyncService, UserCareerStateDoc } from './aws-sync.service';
+import { CloudSyncService, UserCareerStateDoc } from './cloud-sync.service';
 import { SecureStorageService } from './security/secure-storage.service';
 
 export interface CourseStateEntry {
@@ -21,7 +21,7 @@ export interface CourseStateEntry {
 export class CourseService {
   private readonly careerService = inject(CareerService, { optional: true });
   private readonly authService = inject(AuthService, { optional: true });
-  private readonly awsSync = inject(AwsSyncService, { optional: true });
+  private readonly cloudSync = inject(CloudSyncService, { optional: true });
   private readonly secureStorage = inject(SecureStorageService, { optional: true });
 
   // Layout per plan (which semester each subject is placed in)
@@ -178,12 +178,12 @@ export class CourseService {
       this.saveState();
     });
 
-    if (this.authService && this.awsSync) {
+    if (this.authService && this.cloudSync) {
       effect((onCleanup) => {
         const user = this.authService?.userSignal();
         const careerId = this.activeCareerIdSignal();
-        if (user && this.awsSync) {
-          const sub = this.awsSync.getUserCareerData$(user.uid, careerId).subscribe((cloudDoc) => {
+        if (user && this.cloudSync) {
+          const sub = this.cloudSync.getUserCareerData$(user.uid, careerId).subscribe((cloudDoc) => {
             if (cloudDoc) {
               this.applyCloudData(cloudDoc);
             } else {
@@ -675,12 +675,12 @@ export class CourseService {
   }
 
   private syncToCloud(uid: string, careerId: string): void {
-    if (!this.awsSync) return;
+    if (!this.cloudSync) return;
     const courseStatesObj: Record<string, CourseStateEntry> = {};
     this.courseStateSignal().forEach((val, key) => {
       courseStatesObj[key.toString()] = val;
     });
-    this.awsSync.saveUserCareerData(uid, careerId, {
+    this.cloudSync.saveUserCareerData(uid, careerId, {
       coursesByPlan: this.serializeCoursesByPlan(this.coursesByPlanSignal()),
       courseStates: courseStatesObj,
     });
@@ -720,7 +720,7 @@ export class CourseService {
       }
 
       const user = this.authService?.userSignal();
-      if (user && this.awsSync) {
+      if (user && this.cloudSync) {
         this.syncToCloud(user.uid, this.activeCareerIdSignal());
       }
     } catch (error) {

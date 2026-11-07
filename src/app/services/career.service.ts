@@ -6,7 +6,7 @@ import {
   RawCourseData,
   EMPTY_CAREER_PLAN,
 } from '../models/career.model';
-import { AwsSyncService } from './aws-sync.service';
+import { CloudSyncService } from './cloud-sync.service';
 
 import sistemasPlan from '../../../scripts/seed-data/sistemas.json';
 import audiovisualPlan from '../../../scripts/seed-data/audiovisual.json';
@@ -17,7 +17,7 @@ import { PlanService } from './plan.service';
   providedIn: 'root',
 })
 export class CareerService {
-  private readonly awsSyncService = inject(AwsSyncService, { optional: true });
+  private readonly cloudSyncService = inject(CloudSyncService, { optional: true });
   private readonly injector = inject(Injector, { optional: true });
 
   private getPlanService(): PlanService | null {
