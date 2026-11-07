@@ -56,17 +56,9 @@
   gap: 10px;
 }
 
-.builder-input {
+.builder-form-field {
   flex: 1;
-  min-width: 200px;
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border-tertiary);
-  border-radius: var();
-  padding: 8px 12px;
-  font-size: 13px;
-  color: var(--color-text-primary);
-  outline: none;
-  transition: border-color var();
+  min-width: 220px;
 }
 
 .builder-input::placeholder {

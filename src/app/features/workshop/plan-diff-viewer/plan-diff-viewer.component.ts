@@ -1,11 +1,14 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 import { RebaseConflict } from '../../../models/plan-manifest.model';
 
 @Component({
   selector: 'app-plan-diff-viewer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule],
   templateUrl: './plan-diff-viewer.component.html',
   styleUrl: './plan-diff-viewer.component.css'
 })

@@ -4,6 +4,7 @@
       <mat-icon class="toast-icon">{{ getIcon(toast.type) }}</mat-icon>
       <span class="toast-message">{{ toast.message }}</span>
       <button
+        mat-icon-button
         type="button"
         class="toast-close"
         (click)="dismiss(toast.id)"
