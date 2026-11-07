@@ -14,7 +14,7 @@ describe('WorkshopHubComponent', () => {
     } catch {}
     await TestBed.configureTestingModule({
       imports: [WorkshopHubComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([{ path: 'home', component: WorkshopHubComponent }])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WorkshopHubComponent);
@@ -22,23 +22,26 @@ describe('WorkshopHubComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crearse correctamente e inicializarse con un catálogo por defecto', () => {
+  it('should create component successfully and initialize with default catalog', () => {
     expect(component).toBeTruthy();
     expect(component.catalog.length).toBeGreaterThan(0);
   });
 
-  it('debe filtrar los planes por término de búsqueda en la propiedad searchQuery', () => {
+  it('should filter plans by search term in searchQuery property', () => {
     component.searchQuery = 'sistemas';
     const result = component.filteredAndSortedCatalog;
     expect(result.length).toBeGreaterThan(0);
-    expect(result.every((item) =>
-      item.name.toLowerCase().includes('sistemas') ||
-      item.university.toLowerCase().includes('sistemas') ||
-      item.faculty.toLowerCase().includes('sistemas')
-    )).toBe(true);
+    expect(
+      result.every(
+        (item) =>
+          item.name.toLowerCase().includes('sistemas') ||
+          item.university.toLowerCase().includes('sistemas') ||
+          item.faculty.toLowerCase().includes('sistemas'),
+      ),
+    ).toBe(true);
   });
 
-  it('debe filtrar de forma insensible a tildes y diacríticos (ej: tecnologica encuentra Tecnológica)', () => {
+  it('should filter insensitively to accents and diacritics (e.g. tecnologica matches Tecnológica)', () => {
     component.catalog = [
       ...component.catalog,
       {
@@ -48,8 +51,15 @@ describe('WorkshopHubComponent', () => {
         faculty: 'Facultad Regional',
         version: '1.0.0',
         updatedAt: '2026-08-19',
-        manifest: { id: 'test-tecnologica', name: 'Ingeniería Tecnológica', university: 'UTN', faculty: 'FR', version: '1.0.0', courses: [] }
-      }
+        manifest: {
+          id: 'test-tecnologica',
+          name: 'Ingeniería Tecnológica',
+          university: 'UTN',
+          faculty: 'FR',
+          version: '1.0.0',
+          courses: [],
+        },
+      },
     ];
 
     component.searchQuery = 'tecnologica';
@@ -61,36 +71,33 @@ describe('WorkshopHubComponent', () => {
     expect(result.some((item) => item.id === 'test-tecnologica')).toBe(true);
   });
 
-  it('debe ordenar por nombre de carrera (name) en orden ascendente y descendente', () => {
+  it('should sort by career name (name) in ascending and descending order', () => {
     component.sortColumn = 'name';
     component.sortDirection = 'asc';
     let result = component.filteredAndSortedCatalog;
     expect(result[0].name.localeCompare(result[1].name, 'es')).toBeLessThanOrEqual(0);
 
-    component.toggleSort('name'); // Cambia a desc
+    component.toggleSort('name'); // Changes to desc
     expect(component.sortDirection).toBe('desc');
     result = component.filteredAndSortedCatalog;
     expect(result[0].name.localeCompare(result[1].name, 'es')).toBeGreaterThanOrEqual(0);
   });
 
-  it('debe ordenar por facultad en orden ascendente y descendente', () => {
-    component.toggleSort('faculty'); // Cambia columna a faculty asc
+  it('should sort by faculty in ascending and descending order', () => {
+    component.toggleSort('faculty'); // Changes column to faculty asc
     expect(component.sortColumn).toBe('faculty');
     expect(component.sortDirection).toBe('asc');
     let result = component.filteredAndSortedCatalog;
     expect(result[0].faculty.localeCompare(result[1].faculty, 'es')).toBeLessThanOrEqual(0);
 
-    component.toggleSort('faculty'); // Cambia a desc
+    component.toggleSort('faculty'); // Changes to desc
     expect(component.sortDirection).toBe('desc');
     result = component.filteredAndSortedCatalog;
     expect(result[0].faculty.localeCompare(result[1].faculty, 'es')).toBeGreaterThanOrEqual(0);
   });
 
-  it('debe emitir onClose al hacer click en cerrar', () => {
-    let closed = false;
-    component.onClose.subscribe(() => (closed = true));
-    const closeBtn = fixture.nativeElement.querySelector('.btn-close');
-    closeBtn.click();
-    expect(closed).toBe(true);
+  it('should not render back button in header of workshop hub', () => {
+    const closeBtn = fixture.nativeElement.querySelector('button[aria-label="Volver"]');
+    expect(closeBtn).toBeNull();
   });
 });

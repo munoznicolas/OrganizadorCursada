@@ -50,8 +50,8 @@ export class CourseCardComponent {
   ariaLabel = computed(() => {
     const c = this.course();
     const tag = this.statusTag();
-    const statusText = tag ? `Estado: ${tag}` : `Estado: ${c.status}`;
-    return `${c.name}. ${statusText}. Presione enter o espacio para cambiar estado.`;
+    const statusText = tag ? `Status: ${tag}` : `Status: ${c.status}`;
+    return `${c.name}. ${statusText}. Press enter or space to change status.`;
   });
 
   highlightClass = computed(() => {
@@ -130,5 +130,12 @@ export class CourseCardComponent {
 
   onMouseLeave(): void {
     this.mouseLeft.emit();
+  }
+
+  onTogglePause(event: Event): void {
+    event.stopPropagation();
+    const c = this.course();
+    const nextStatus = c.status === 'on-hold' ? 'pending' : 'on-hold';
+    this.courseService.setCourseStatus(c.id, nextStatus);
   }
 }

@@ -1,24 +1,23 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Hub de Planes Comunitario - Buscador y Tabla Ordenable', () => {
+test.describe('Community Workshop Hub - Search and Sortable Table', () => {
   test.beforeEach(async ({ page }) => {
-    // Resetear localStorage para arrancar en estado limpio
+    // Reset localStorage to start in clean state
     await page.goto('/home');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
   });
 
-  test('debe abrir el modal del Hub de Planes y mostrar la tabla con los planes comunitarios', async ({ page }) => {
-    await page.goto('/home');
-    const exploreBtn = page.getByRole('button', { name: /Explorar Planes/i });
-    await expect(exploreBtn).toBeVisible();
-    await exploreBtn.click();
+  test('should open Workshop Hub and display table with community plans', async ({
+    page,
+  }) => {
+    await page.goto('/workshop');
 
-    // Confirmar visibilidad del modal del Hub de Planes
-    const modalHeader = page.locator('.modal-header h3');
-    await expect(modalHeader).toContainText('Plan Hub Comunitario');
+    // Confirm visibility of Workshop Hub header
+    const pageHeader = page.locator('.app-page-header .page-title');
+    await expect(pageHeader).toContainText('Plan Hub Comunitario');
 
-    // Confirmar presencia del buscador y de la tabla
+    // Confirm presence of search input and table
     const searchInput = page.locator('[data-testid="search-input"]');
     await expect(searchInput).toBeVisible();
 
@@ -31,9 +30,8 @@ test.describe('Hub de Planes Comunitario - Buscador y Tabla Ordenable', () => {
     expect(count).toBe(2);
   });
 
-  test('debe filtrar los planes en la tabla al escribir en el buscador', async ({ page }) => {
-    await page.goto('/home');
-    await page.getByRole('button', { name: /Explorar Planes/i }).click();
+  test('should filter plans in table when typing in search input', async ({ page }) => {
+    await page.goto('/workshop');
 
     const searchInput = page.locator('[data-testid="search-input"]');
     await searchInput.fill('Sistemas');
@@ -42,61 +40,85 @@ test.describe('Hub de Planes Comunitario - Buscador y Tabla Ordenable', () => {
     await expect(rows).toHaveCount(1);
     await expect(rows.first()).toContainText('Ingeniería en Sistemas de Información');
 
-    // Limpiar búsqueda
+    // Clear search
     await searchInput.fill('');
     await expect(rows).toHaveCount(2);
   });
 
-  test('debe ordenar la tabla por Nombre de Carrera (ascendente y descendente)', async ({ page }) => {
-    await page.goto('/home');
-    await page.getByRole('button', { name: /Explorar Planes/i }).click();
+  test('should sort table by career name (ascending and descending)', async ({
+    page,
+  }) => {
+    await page.goto('/workshop');
 
     const sortNameHeader = page.locator('[data-testid="sort-name"]');
     await expect(sortNameHeader).toBeVisible();
 
-    // Por defecto inicia ordenado por nombre ASC -> Ingeniería en Sistemas primero
+    // Default starts sorted by name ASC -> Ingeniería en Sistemas first
     const firstRowNameAsc = page.locator('[data-testid="plan-row"]').first().locator('.plan-title');
     await expect(firstRowNameAsc).toHaveText('Ingeniería en Sistemas de Información');
 
-    // Click en encabezado Carrera -> cambia a DESC -> Licenciatura en Diseño Audiovisual
+    // Click Career header -> changes to DESC -> Licenciatura en Diseño Audiovisual
     await sortNameHeader.click();
-    const firstRowNameDesc = page.locator('[data-testid="plan-row"]').first().locator('.plan-title');
+    const firstRowNameDesc = page
+      .locator('[data-testid="plan-row"]')
+      .first()
+      .locator('.plan-title');
     await expect(firstRowNameDesc).toHaveText('Licenciatura en Diseño Audiovisual');
 
-    // Volver a clickear -> cambia a ASC -> Ingeniería en Sistemas
+    // Click again -> changes to ASC -> Ingeniería en Sistemas
     await sortNameHeader.click();
-    await expect(page.locator('[data-testid="plan-row"]').first().locator('.plan-title')).toHaveText('Ingeniería en Sistemas de Información');
+    await expect(
+      page.locator('[data-testid="plan-row"]').first().locator('.plan-title'),
+    ).toHaveText('Ingeniería en Sistemas de Información');
   });
 
-  test('debe ordenar la tabla por Facultad (ascendente y descendente)', async ({ page }) => {
-    await page.goto('/home');
-    await page.getByRole('button', { name: /Explorar Planes/i }).click();
+  test('should sort table by faculty (ascending and descending)', async ({ page }) => {
+    await page.goto('/workshop');
 
     const sortFacultyHeader = page.locator('[data-testid="sort-faculty"]');
     await expect(sortFacultyHeader).toBeVisible();
 
-    // Click en Facultad -> ASC -> "Escuela de Artes y Medios" primera
+    // Click Faculty -> ASC -> "Escuela de Artes y Medios" first
     await sortFacultyHeader.click();
-    const firstRowFacultyAsc = page.locator('[data-testid="plan-row"]').first().locator('.col-faculty');
+    const firstRowFacultyAsc = page
+      .locator('[data-testid="plan-row"]')
+      .first()
+      .locator('.col-faculty');
     await expect(firstRowFacultyAsc).toHaveText('Escuela de Artes y Medios');
 
-    // Click de nuevo -> DESC -> "Facultad Regional Buenos Aires" primera
+    // Click again -> DESC -> "Facultad Regional Buenos Aires" first
     await sortFacultyHeader.click();
-    const firstRowFacultyDesc = page.locator('[data-testid="plan-row"]').first().locator('.col-faculty');
+    const firstRowFacultyDesc = page
+      .locator('[data-testid="plan-row"]')
+      .first()
+      .locator('.col-faculty');
     await expect(firstRowFacultyDesc).toHaveText('Facultad Regional Buenos Aires');
   });
 
-  test('debe permitir suscribirse a un plan desde la tabla', async ({ page }) => {
-    await page.goto('/home');
-    await page.getByRole('button', { name: /Explorar Planes/i }).click();
+  test('should allow subscribing to a plan from table', async ({ page }) => {
+    await page.goto('/workshop');
 
-    // Buscar "Sistemas" y suscribirse
+    // Search "Sistemas" and subscribe
     await page.locator('[data-testid="search-input"]').fill('Sistemas');
-    const subscribeBtn = page.locator('[data-testid="plan-row"]').first().getByRole('button', { name: /Suscribirse/i });
+    const subscribeBtn = page
+      .locator('[data-testid="plan-row"]')
+      .first()
+      .getByRole('button', { name: /Suscribirse/i });
     await subscribeBtn.click();
 
-    // El modal se cierra al suscribirse y redirige a /home con la carrera cargada
+    // Redirects to /home with loaded career
     await expect(page.locator('.header-title-group h1')).toHaveText('Plan de Cursada');
     await expect(page.locator('app-no-plan-selected')).not.toBeVisible();
+  });
+
+  test('should verify that header on /publish does not have back button', async ({
+    page,
+  }) => {
+    await page.goto('/publish');
+    const headerTitle = page.locator('.app-page-header .app-page-title');
+    await expect(headerTitle).toHaveText('Compartir / Publicar Plan de Estudio');
+
+    const backBtn = page.locator('header button[aria-label="Volver"]');
+    await expect(backBtn).not.toBeVisible();
   });
 });

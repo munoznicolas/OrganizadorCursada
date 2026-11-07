@@ -263,13 +263,15 @@ describe('CourseService - Lesson State Toggling', () => {
             q: 1,
             cursarReqId: [],
             aprobarReqId: [],
-            lessons: [{ id: 'L1', professor: 'Prof. X', day: 1, startTime: '08:00', endTime: '12:00' }],
+            lessons: [
+              { id: 'L1', professor: 'Prof. X', day: 1, startTime: '08:00', endTime: '12:00' },
+            ],
           },
         ],
       };
 
       service.setCareerPlan(mockSistemasPlan);
-      expect(service.courses().length).toBe(mockSistemasPlan.courses.length);
+      expect(service.courses()).toHaveLength(mockSistemasPlan.courses.length);
       expect(service.courses()[0].name).toBe(mockSistemasPlan.courses[0].name);
 
       // Change status of first course
@@ -281,7 +283,7 @@ describe('CourseService - Lesson State Toggling', () => {
       service.reset();
 
       // Courses should still belong to mockSistemasPlan and be reset to pending
-      expect(service.courses().length).toBe(mockSistemasPlan.courses.length);
+      expect(service.courses()).toHaveLength(mockSistemasPlan.courses.length);
       expect(service.courses()[0].status).toBe('pending');
     });
   });
@@ -334,11 +336,15 @@ describe('CourseService - Lesson State Toggling', () => {
       expect(updatedCourse.status).toBe('coursing');
       expect(updatedCourse.selectedLessonId).toBe(course.lessons[0].id);
 
-      const selectedLesson = updatedCourse.lessons.find((l) => l.id === updatedCourse.selectedLessonId);
+      const selectedLesson = updatedCourse.lessons.find(
+        (l) => l.id === updatedCourse.selectedLessonId,
+      );
       expect(selectedLesson?.status).toBe('coursing');
 
       if (updatedCourse.lessons.length > 1) {
-        const unselectedLessons = updatedCourse.lessons.filter((l) => l.id !== updatedCourse.selectedLessonId);
+        const unselectedLessons = updatedCourse.lessons.filter(
+          (l) => l.id !== updatedCourse.selectedLessonId,
+        );
         expect(unselectedLessons.every((l) => l.status === 'pending')).toBe(true);
       }
     });
@@ -386,33 +392,46 @@ describe('CourseService - Lesson State Toggling', () => {
         setItem: (key: string, value: string) => {
           mockStore[key] = value;
         },
-        clear: () => {},
-        removeItem: () => {},
+        clear: () => {
+          Object.keys(mockStore).forEach((k) => delete mockStore[k]);
+        },
+        removeItem: (key: string) => {
+          delete mockStore[key];
+        },
       };
 
+      const originalLocalStorage = globalThis.localStorage;
       Object.defineProperty(globalThis, 'localStorage', {
         value: mockLocalStorage,
         configurable: true,
         writable: true,
       });
 
-      // Re-create service instance to trigger loadState()
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({});
-      const newService = TestBed.inject(CourseService);
-      newService.setCareerPlan(TEST_CAREER_PLAN);
-      (newService as any).loadState(TEST_CAREER_PLAN);
-      const pa1 = newService.getCourseById(1);
+      try {
+        // Re-create service instance to trigger loadState()
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({});
+        const newService = TestBed.inject(CourseService);
+        newService.setCareerPlan(TEST_CAREER_PLAN);
+        (newService as any).loadState(TEST_CAREER_PLAN);
+        const pa1 = newService.getCourseById(1);
 
-      expect(pa1?.status).toBe('coursing');
-      expect(pa1?.lessons[0].status).toBe('coursing');
+        expect(pa1?.status).toBe('coursing');
+        expect(pa1?.lessons[0].status).toBe('coursing');
+      } finally {
+        Object.defineProperty(globalThis, 'localStorage', {
+          value: originalLocalStorage,
+          configurable: true,
+          writable: true,
+        });
+      }
     });
 
     it('should sanitize corrupted localStorage courseStates data without failing', () => {
       const corruptedState = {
         courseStates: {
           '1': { status: 'invalid_status', lessonStatuses: { 'PA1-L1': 'bad_status' } },
-          'not_a_number': { status: 'approved' },
+          not_a_number: { status: 'approved' },
           '12': null,
         },
       };
@@ -426,25 +445,38 @@ describe('CourseService - Lesson State Toggling', () => {
         setItem: (key: string, value: string) => {
           mockStore[key] = value;
         },
-        clear: () => {},
-        removeItem: () => {},
+        clear: () => {
+          Object.keys(mockStore).forEach((k) => delete mockStore[k]);
+        },
+        removeItem: (key: string) => {
+          delete mockStore[key];
+        },
       };
 
+      const originalLocalStorage = globalThis.localStorage;
       Object.defineProperty(globalThis, 'localStorage', {
         value: mockLocalStorage,
         configurable: true,
         writable: true,
       });
 
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({});
-      const newService = TestBed.inject(CourseService);
-      newService.setCareerPlan(TEST_CAREER_PLAN);
-      const pa1 = newService.getCourseById(1);
-      const pa2 = newService.getCourseById(12);
+      try {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({});
+        const newService = TestBed.inject(CourseService);
+        newService.setCareerPlan(TEST_CAREER_PLAN);
+        const pa1 = newService.getCourseById(1);
+        const pa2 = newService.getCourseById(12);
 
-      expect(pa1?.status).toBe('pending');
-      expect(pa2?.status).toBe('pending');
+        expect(pa1?.status).toBe('pending');
+        expect(pa2?.status).toBe('pending');
+      } finally {
+        Object.defineProperty(globalThis, 'localStorage', {
+          value: originalLocalStorage,
+          configurable: true,
+          writable: true,
+        });
+      }
     });
   });
 
@@ -474,6 +506,23 @@ describe('CourseService - Lesson State Toggling', () => {
       expect(service.isCourseFiltered(course)).toBe(false);
     });
   });
+
+  describe('On-Hold Course Status & Prerequisite Validation', () => {
+    it('should set course status to on-hold and prevent downstream prerequisite satisfaction', () => {
+      service.setCourseStatus(1, 'on-hold');
+      const pa1 = service.getCourseById(1);
+      expect(pa1?.status).toBe('on-hold');
+
+      const canCoursePa2 = service.canChangeStatusTo(12, 'coursing');
+      expect(canCoursePa2).toBe(false);
+    });
+
+    it('should allow resuming an on-hold course back to pending', () => {
+      service.setCourseStatus(1, 'on-hold');
+      expect(service.getCourseById(1)?.status).toBe('on-hold');
+
+      service.setCourseStatus(1, 'pending');
+      expect(service.getCourseById(1)?.status).toBe('pending');
+    });
+  });
 });
-
-

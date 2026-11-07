@@ -1,4 +1,12 @@
-import { Component, ChangeDetectionStrategy, inject, computed, signal, output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  computed,
+  signal,
+  output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -78,6 +86,7 @@ export class CareerSelectorComponent {
 
   openPlanHub(): void {
     this.openWorkshop.emit();
+    void this.router.navigate(['/workshop']);
   }
 
   editCurrentPlanInBuilder(): void {
@@ -89,4 +98,3 @@ export class CareerSelectorComponent {
     void this.router.navigate(['/builder'], { queryParams: { mode: 'new' } });
   }
 }
-

@@ -9,7 +9,7 @@ describe('CourseGridComponent', () => {
   const createMockCourses = (qValues: number[]): Course[] => {
     return qValues.map((q, index) => ({
       id: index + 1,
-      name: `Materia ${index + 1}`,
+      name: `Course ${index + 1}`,
       year: 1,
       q,
       status: 'pending',
@@ -60,7 +60,7 @@ describe('CourseGridComponent', () => {
     // Verify "1er cuatrimestre" and "2do cuatrimestre" are NOT present on the screen
     expect(labels).not.toContain('1er cuatrimestre');
     expect(labels).not.toContain('2do cuatrimestre');
-    expect(labels.length).toBe(1);
+    expect(labels).toHaveLength(1);
   });
 
   it('should render 1ER CUATRIMESTRE and 2DO CUATRIMESTRE headers when courses have q=1 and q=2', () => {
@@ -91,6 +91,6 @@ describe('CourseGridComponent', () => {
     expect(labels).toContain('Anual');
     expect(labels).toContain('1er cuatrimestre');
     expect(labels).toContain('2do cuatrimestre');
-    expect(labels.length).toBe(3);
+    expect(labels).toHaveLength(3);
   });
 });

@@ -23,7 +23,7 @@ describe('SidebarComponent', () => {
 
   it('should render items including Calendario Académico as a single route item', () => {
     const items = component.items();
-    expect(items.length).toBe(3);
+    expect(items).toHaveLength(5);
     const academicItem = items.find((i) => i.label === 'Calendario Académico');
     expect(academicItem).toBeDefined();
     expect(academicItem?.route).toBe('/academicCalendar');
@@ -31,7 +31,7 @@ describe('SidebarComponent', () => {
   });
 
   it('should handle action items when emitted', () => {
-    const workshopSpy = vi.spyOn(component.onOpenWorkshop, 'emit');
+    const workshopSpy = vi.spyOn(component.openWorkshop, 'emit');
     component.handleAction({ label: 'Workshop', action: 'open_workshop' });
     expect(workshopSpy).toHaveBeenCalled();
   });

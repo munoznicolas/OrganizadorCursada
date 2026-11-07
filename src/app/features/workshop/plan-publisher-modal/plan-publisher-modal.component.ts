@@ -1,5 +1,6 @@
 import { Component, input, output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { PlanManifest } from '../../../models/plan-manifest.model';
 import { PlanSanitizerService } from '../../../services/plan-sanitizer.service';
 import { EntropyScorerService, EntropyReport } from '../../../services/entropy-scorer.service';
@@ -7,23 +8,25 @@ import { PlanLinterService, LintResult } from '../../../services/plan-linter.ser
 import { encodePlanToUrlHash } from '../../../utils/hash-serializer.util';
 import { AntiSybilService } from '../../../services/anti-sybil.service';
 import { ToastService } from '../../../services/toast.service';
+import { CourseService } from '../../../services/course.service';
 
 @Component({
   selector: 'app-plan-publisher-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './plan-publisher-modal.component.html',
-  styleUrl: './plan-publisher-modal.component.css'
+  styleUrl: './plan-publisher-modal.component.css',
 })
 export class PlanPublisherModalComponent implements OnInit {
   rawPlan = input<unknown>();
-  onClose = output<void>();
+  closeModal = output<void>();
 
-  private sanitizer = inject(PlanSanitizerService);
-  private entropyScorer = inject(EntropyScorerService);
-  private linter = inject(PlanLinterService);
-  private antiSybil = inject(AntiSybilService);
-  private toast = inject(ToastService);
+  private readonly sanitizer = inject(PlanSanitizerService);
+  private readonly entropyScorer = inject(EntropyScorerService);
+  private readonly linter = inject(PlanLinterService);
+  private readonly antiSybil = inject(AntiSybilService);
+  private readonly toast = inject(ToastService);
+  private readonly courseService = inject(CourseService);
 
   sanitizedManifest?: PlanManifest;
   entropyReport?: EntropyReport;
@@ -31,12 +34,22 @@ export class PlanPublisherModalComponent implements OnInit {
   isPublishing = false;
 
   ngOnInit(): void {
-    const planData = this.rawPlan();
-    if (planData) {
-      this.sanitizedManifest = this.sanitizer.sanitizeForPublishing(planData as Record<string, unknown>);
-      this.entropyReport = this.entropyScorer.calculatePlanEntropy(this.sanitizedManifest);
-      this.lintResult = this.linter.lintPlanManifest(this.sanitizedManifest);
+    let planData = this.rawPlan();
+    if (!planData) {
+      const activeCourses = this.courseService.courses();
+      planData = {
+        id: 'plan_current',
+        name: 'Mi Plan Actual',
+        university: 'Universidad',
+        version: '1.0.0',
+        courses: activeCourses,
+      };
     }
+    this.sanitizedManifest = this.sanitizer.sanitizeForPublishing(
+      planData as Record<string, unknown>,
+    );
+    this.entropyReport = this.entropyScorer.calculatePlanEntropy(this.sanitizedManifest);
+    this.lintResult = this.linter.lintPlanManifest(this.sanitizedManifest);
   }
 
   copyShareLink(): void {
@@ -65,8 +78,11 @@ export class PlanPublisherModalComponent implements OnInit {
       }
       const verificationPayload = this.antiSybil.buildVerificationPayload(proof, payloadStr);
       // Attach verificationPayload for submission to Workshop backend API
-      this.toast.show(`¡Plan publicado exitosamente en el Workshop! (Prueba: ${proof.proofType.toUpperCase()})`, 'success');
-      this.onClose.emit();
+      this.toast.show(
+        `¡Plan publicado exitosamente en el Workshop! (Prueba: ${proof.proofType.toUpperCase()})`,
+        'success',
+      );
+      this.closeModal.emit();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error al publicar en el Workshop.';
       this.toast.show(message, 'error');

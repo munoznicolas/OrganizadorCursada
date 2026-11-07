@@ -1,0 +1,65 @@
+name: 🎟️ Agent Task Ticket
+description: Create a functional requirement or technical task ticket for AI Agent workflow.
+title: '[TASK]: '
+labels: ['status:draft', 'persona:analista']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📝 1. Functional Specification (Analyst)
+  - type: textarea
+    id: problem
+    attributes:
+      label: Context & Problem Statement
+      description: Clear description of the student's problem or functional requirement.
+    validations:
+      required: true
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User Stories (English Format)
+      description: 'As a [persona] I want [action] So that [outcome]'
+      placeholder: |
+        As a student
+        I want...
+        So that...
+    validations:
+      required: true
+  - type: textarea
+    id: gherkin
+    attributes:
+      label: Acceptance Criteria (Gherkin Format)
+      description: Pass/fail scenarios
+      placeholder: |
+        Scenario: ...
+          Given ...
+          When ...
+          Then ...
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Service & Domain Model Impact
+      description: Affected services, components, and domain models.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 💻 2. Implementation Record (Developer)
+        - **Status**: PENDING
+        - **Modified Files**: TBD
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🔍 3. Quality Certification (QA)
+        - **Status**: PENDING
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🚀 4. Closure & Release (GitFlow)
+        - **Status**: PENDING

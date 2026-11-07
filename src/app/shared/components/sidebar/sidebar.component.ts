@@ -19,21 +19,22 @@ export interface SidebarItem {
   imports: [RouterModule, MatListModule, MatIconModule],
 })
 export class SidebarComponent {
-  onOpenWorkshop = output<void>();
-  onOpenPublisher = output<void>();
+  openWorkshop = output<void>();
+  openPublisher = output<void>();
 
   items = computed<SidebarItem[]>(() => [
     { label: 'Home', route: '/home', icon: 'home' },
     { label: 'Mi Semana', route: '/myWeek', icon: 'calendar_view_week' },
     { label: 'Calendario Académico', route: '/academicCalendar', icon: 'date_range' },
+    { label: 'Workshop', route: '/workshop', icon: 'store' },
+    { label: 'Publicar Plan', route: '/publish', icon: 'publish' },
   ]);
 
   handleAction(item: SidebarItem): void {
     if (item.action === 'open_workshop') {
-      this.onOpenWorkshop.emit();
+      this.openWorkshop.emit();
     } else if (item.action === 'open_publisher') {
-      this.onOpenPublisher.emit();
+      this.openPublisher.emit();
     }
   }
 }
-

@@ -1,11 +1,16 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  signal,
+  computed,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
 import { CareerSelectorComponent } from './features/workshop/career-selector/career-selector.component';
-import { WorkshopHubComponent } from './features/workshop/workshop-hub/workshop-hub.component';
-import { PlanPublisherModalComponent } from './features/workshop/plan-publisher-modal/plan-publisher-modal.component';
 import { PlanDiffViewerComponent } from './features/workshop/plan-diff-viewer/plan-diff-viewer.component';
 import { UserMenuComponent } from './shared/components/user-menu/user-menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -33,8 +38,6 @@ import { PlanManifest } from './models/plan-manifest.model';
     ToastContainerComponent,
     CareerSelectorComponent,
     UserMenuComponent,
-    WorkshopHubComponent,
-    PlanPublisherModalComponent,
     PlanDiffViewerComponent,
     MatSidenavModule,
     MatToolbarModule,
@@ -44,12 +47,12 @@ import { PlanManifest } from './models/plan-manifest.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App implements OnInit {
-  themeService = inject(ThemeService);
-  planService = inject(PlanService);
-  private careerService = inject(CareerService);
-  private courseService = inject(CourseService);
-  private toast = inject(ToastService);
-  private router = inject(Router);
+  readonly themeService = inject(ThemeService);
+  readonly planService = inject(PlanService);
+  private readonly careerService = inject(CareerService);
+  private readonly courseService = inject(CourseService);
+  private readonly toast = inject(ToastService);
+  private readonly router = inject(Router);
 
   isOpen = signal(true);
   private internalWorkshopSignal = signal(false);
@@ -70,7 +73,10 @@ export class App implements OnInit {
           const planId = this.careerService.addCareerFromManifest(decoded);
           this.planService.addPlan({ id: planId, label: decoded.name });
           this.router.navigate(['/home']);
-          this.toast.show(`¡Plan "${decoded.name}" importado exitosamente desde el enlace de WhatsApp/Telegram!`, 'success');
+          this.toast.show(
+            `¡Plan "${decoded.name}" importado exitosamente desde el enlace de WhatsApp/Telegram!`,
+            'success',
+          );
           // Clear hash
           history.replaceState(null, '', window.location.pathname);
         }
@@ -87,9 +93,9 @@ export class App implements OnInit {
       name: 'Mi Plan Actual',
       university: 'Universidad',
       version: '1.0.0',
-      courses: activeCareer
+      courses: activeCareer,
     });
-    this.showPublisher.set(true);
+    this.router.navigate(['/publish']);
   }
 
   handleSubscribePlan(manifest: PlanManifest): void {
@@ -109,13 +115,11 @@ export class App implements OnInit {
   }
 
   openWorkshop(): void {
-    this.planService.openWorkshop();
-    this.internalWorkshopSignal.set(true);
+    this.router.navigate(['/workshop']);
   }
 
   closeWorkshop(): void {
-    this.planService.closeWorkshop();
-    this.internalWorkshopSignal.set(false);
+    this.router.navigate(['/home']);
   }
 
   resetToNewUser(): void {

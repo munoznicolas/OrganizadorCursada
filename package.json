@@ -8,13 +8,29 @@
     "build": "npm run config:env && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:coverage": "ng test --watch=false --coverage --coverage-reporters=lcov",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "docker:up": "docker compose up",
     "docker:up:prod": "docker compose -f docker-compose.prod.yml up",
     "docker:down": "docker compose down",
-    "docker:build": "docker compose build"
+    "docker:build": "docker compose build",
+    "sonar:up": "docker compose -f docker-compose.sonar.yml up -d",
+    "sonar:down": "docker compose -f docker-compose.sonar.yml down",
+    "sonar:scan:local": "node scripts/sonar-scan-local.mjs",
+    "prepare": "husky",
+    "ticket:new": "node .agents/scripts/ticket_manager.js new",
+    "ticket:status": "node .agents/scripts/ticket_manager.js status",
+    "qa:audit": "node .agents/scripts/qa_audit.js",
+    "qa:verify": "node .agents/scripts/qa_verify.js",
+    "gitflow:branch": "node .agents/scripts/gitflow_helper.js branch",
+    "gitflow:commit": "node .agents/scripts/gitflow_helper.js commit",
+    "gitflow:pr": "node .agents/scripts/gitflow_helper.js pr",
+    "gitflow:auto-close": "node .agents/scripts/auto_close_issue.js",
+    "gen:service": "node .agents/scripts/generate_service.js",
+    "pages:dev": "wrangler dev",
+    "pages:deploy": "wrangler deploy"
   },
   "prettier": {
     "printWidth": 100,
@@ -39,7 +55,6 @@
     "@angular/material": "^21.2.7",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
-    "aws-amplify": "^6.14.0",
     "cytoscape": "^3.33.2",
     "cytoscape-dagre": "^2.5.0",
     "mermaid": "^11.14.0",
@@ -53,8 +68,12 @@
     "@playwright/test": "^1.62.1",
     "@types/cytoscape": "^3.21.9",
     "@types/cytoscape-dagre": "^2.3.4",
+    "@vitest/coverage-v8": "^4.0.8",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "sonarqube-scanner": "^4.3.0",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "wrangler": "^4.0.0"
   }
 }
