@@ -1,4 +1,4 @@
-name: CI & Deployment Build
+name: CI & Deployment to Cloudflare Pages
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,37 +21,24 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Generate production environment configuration
         env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_USER_POOL_ID: ${{ secrets.AWS_USER_POOL_ID }}
-          AWS_USER_POOL_WEB_CLIENT_ID: ${{ secrets.AWS_USER_POOL_WEB_CLIENT_ID }}
-          AWS_COGNITO_OAUTH_DOMAIN: ${{ secrets.AWS_COGNITO_OAUTH_DOMAIN }}
-          AWS_REDIRECT_SIGN_IN: ${{ secrets.AWS_REDIRECT_SIGN_IN }}
-          AWS_REDIRECT_SIGN_OUT: ${{ secrets.AWS_REDIRECT_SIGN_OUT }}
-          AWS_API_ENDPOINT: ${{ secrets.AWS_API_ENDPOINT }}
+          CLOUDFLARE_API_ENDPOINT: ${{ secrets.CLOUDFLARE_API_ENDPOINT }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         run: npm run config:env
+
+      - name: Run Unit Tests
+        run: npm test -- --watch=false
 
       - name: Build Angular Application
         run: npm run build
 
-      - name: Configure AWS Credentials
+      - name: Deploy to Cloudflare Pages
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: cloudflare/wrangler-action@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Deploy static assets to Amazon S3
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          aws s3 sync dist/OrganizadorCursada/browser s3://${{ secrets.AWS_S3_BUCKET }} --delete
-
-      - name: Invalidate CloudFront CDN Cache
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
-
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/OrganizadorCursada/browser --project-name=organizador-cursada

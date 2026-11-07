@@ -28,7 +28,9 @@
     "gitflow:commit": "node .agents/scripts/gitflow_helper.js commit",
     "gitflow:pr": "node .agents/scripts/gitflow_helper.js pr",
     "gitflow:auto-close": "node .agents/scripts/auto_close_issue.js",
-    "gen:service": "node .agents/scripts/generate_service.js"
+    "gen:service": "node .agents/scripts/generate_service.js",
+    "pages:dev": "wrangler pages dev dist/OrganizadorCursada/browser",
+    "pages:deploy": "wrangler pages deploy dist/OrganizadorCursada/browser"
   },
   "prettier": {
     "printWidth": 100,
@@ -53,7 +55,6 @@
     "@angular/material": "^21.2.7",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
-    "aws-amplify": "^6.14.0",
     "cytoscape": "^3.33.2",
     "cytoscape-dagre": "^2.5.0",
     "mermaid": "^11.14.0",
@@ -72,6 +73,7 @@
     "jsdom": "^27.1.0",
     "sonarqube-scanner": "^4.3.0",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "wrangler": "^3.114.0"
   }
 }

@@ -32,7 +32,6 @@ function filterNoise(output) {
   return output
     .split('\n')
     .filter((line) => {
-      if (line.includes('Amplify has not been configured')) return false;
       if (line.includes('ExperimentalWarning: localStorage')) return false;
       if (line.includes('(Use `node --trace-warnings')) return false;
       return true;
@@ -59,22 +58,19 @@ function runVerification() {
   const testRes = runStep('npm test -- --watch=false');
   if (!testRes.success) {
     console.error('[ERROR] UNIT TESTS FAILED:');
-    console.error(filterNoise(testRes.stdout + '\n' + testRes.stderr));
+    console.error(filterNoise(testRes.stdout || testRes.stderr));
     process.exit(1);
   }
 
   const buildRes = runStep('npm run build');
   if (!buildRes.success) {
     console.error('[ERROR] BUILD FAILED:');
-    console.error(filterNoise(buildRes.stdout + '\n' + buildRes.stderr));
+    console.error(filterNoise(buildRes.stdout || buildRes.stderr));
     process.exit(1);
   }
 
-  const testSummary = extractVitestSummary(testRes.stdout);
-
-  console.log('[SUCCESS] Repo rules: 0 violations');
-  console.log(`[SUCCESS] Unit tests: ${testSummary}`);
-  console.log('[SUCCESS] Build: Clean (Suggested verdict: QA_VERIFIED)');
+  const vitestSummary = extractVitestSummary(testRes.stdout);
+  console.log(`[QA_VERIFIED] Static: OK | Vitest: ${vitestSummary} | Build: OK`);
 }
 
 runVerification();

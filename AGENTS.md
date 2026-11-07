@@ -73,7 +73,7 @@ Activate or consult the relevant skill for each task:
 | **`seguridad-privacidad`**    | [`.agents/skills/seguridad-privacidad`](file:///.agents/skills/seguridad-privacidad/SKILL.md)       | Local privacy airgap, $k$-anonymity, `PlanSanitizerService`, Anti-Sybil protection.                 |
 | **`grafos-correlatividades`** | [`.agents/skills/grafos-correlatividades`](file:///.agents/skills/grafos-correlatividades/SKILL.md) | Prerequisite DAG modeling, Kahn's cycle detection (`PlanLinterService`), Cytoscape, Dagre.          |
 | **`e2e-playwright`**          | [`.agents/skills/e2e-playwright`](file:///.agents/skills/e2e-playwright/SKILL.md)                   | Playwright E2E browser tests, `localStorage` fixtures, drag-and-drop verification.                  |
-| **`devops-amplify`**          | [`.agents/skills/devops-amplify`](file:///.agents/skills/devops-amplify/SKILL.md)                   | Multi-stage Docker, Docker Compose, environment injection (`set-env.js`), AWS Amplify.              |
+| **`devops-amplify`**          | [`.agents/skills/devops-amplify`](file:///.agents/skills/devops-amplify/SKILL.md)                   | Multi-stage Docker, Docker Compose, environment injection (`set-env.js`), Cloudflare Pages & KV.              |
 
 ---
 
