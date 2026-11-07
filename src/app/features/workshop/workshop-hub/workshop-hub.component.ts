@@ -63,9 +63,27 @@ export class WorkshopHubComponent {
   private readonly router = inject(Router);
 
   searchQuery = '';
+  selectedUniversity = 'all';
+  selectedFaculty = 'all';
   catalog: WorkshopEntry[] = [...DEFAULT_CATALOG];
   sortColumn: SortColumn = 'name';
   sortDirection: SortDirection = 'asc';
+
+  get universities(): string[] {
+    const set = new Set(this.catalog.map((c) => c.university).filter(Boolean));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }
+
+  get faculties(): string[] {
+    const set = new Set(this.catalog.map((c) => c.faculty).filter(Boolean));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }
+
+  resetFilters(): void {
+    this.searchQuery = '';
+    this.selectedUniversity = 'all';
+    this.selectedFaculty = 'all';
+  }
 
   isSubscribed(item: WorkshopEntry): boolean {
     return this.careerService.careers().some((c) => c.id === item.id);
@@ -76,7 +94,6 @@ export class WorkshopHubComponent {
     this.careerService.removeCareer(item.id);
     this.toast.show(`Te has desuscrito del plan "${item.name}".`, 'info');
   }
-
 
   toggleSort(column: SortColumn): void {
     if (this.sortColumn === column) {
@@ -94,6 +111,15 @@ export class WorkshopHubComponent {
 
   get filteredAndSortedCatalog(): WorkshopEntry[] {
     let list = this.catalog;
+
+    if (this.selectedUniversity !== 'all') {
+      list = list.filter((c) => c.university === this.selectedUniversity);
+    }
+
+    if (this.selectedFaculty !== 'all') {
+      list = list.filter((c) => c.faculty === this.selectedFaculty);
+    }
+
     if (this.searchQuery.trim()) {
       const q = normalizeString(this.searchQuery);
       list = list.filter(
