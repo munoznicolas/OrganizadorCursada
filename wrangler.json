@@ -3,11 +3,21 @@
   "name": "organizador-cursada",
   "main": "worker/index.ts",
   "compatibility_date": "2025-01-01",
-  "observability": { "enabled": true },
+  "observability": {
+    "enabled": true
+  },
   "assets": {
     "directory": "dist/OrganizadorCursada/browser",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
-  }
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "USER_CAREER_STATES",
+      "id": "985349cf37ce4b67b43fbfe9c1d3d92d"
+    }
+  ]
 }
