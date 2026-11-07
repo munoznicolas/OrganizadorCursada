@@ -29,8 +29,8 @@
     "gitflow:pr": "node .agents/scripts/gitflow_helper.js pr",
     "gitflow:auto-close": "node .agents/scripts/auto_close_issue.js",
     "gen:service": "node .agents/scripts/generate_service.js",
-    "pages:dev": "wrangler pages dev dist/OrganizadorCursada/browser",
-    "pages:deploy": "wrangler pages deploy dist/OrganizadorCursada/browser"
+    "pages:dev": "wrangler dev",
+    "pages:deploy": "wrangler deploy"
   },
   "prettier": {
     "printWidth": 100,
@@ -74,6 +74,6 @@
     "sonarqube-scanner": "^4.3.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8",
-    "wrangler": "^3.114.0"
+    "wrangler": "^4.0.0"
   }
 }
