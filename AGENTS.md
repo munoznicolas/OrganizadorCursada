@@ -36,6 +36,7 @@ The codebase enforces a strict separation of concerns across three layers:
 > 4. **Strict Privacy Airgap**: Personal student progress data must never be transmitted across public network boundaries without prior sanitization via `PlanSanitizerService`.
 > 5. **Prohibition of Emojis**: NEVER use emojis (see [`.agents/rules/no-emojis.md`](file:///.agents/rules/no-emojis.md)).
 > 6. **Mandatory End-to-End GitFlow Execution**: When resolving an issue, the agent MUST complete the full multi-persona workflow automatically without stopping at QA. Upon verifying tests and setting status to `QA_VERIFIED`, the agent must execute `npm run gitflow:commit -- <ID>` and `npm run gitflow:pr -- <ID>` to push the branch and open the Pull Request on GitHub before completing the task.
+> 7. **Mandatory Angular Material UI Components**: All buttons, form controls, inputs, dialogs, cards, chips, and navigation elements MUST use official `@angular/material` components (see [`.agents/rules/angular-material.md`](file:///.agents/rules/angular-material.md)). Raw, unstyled HTML interactive elements are strictly prohibited.
 
 ---
 
@@ -74,6 +75,21 @@ Activate or consult the relevant skill for each task:
 | **`grafos-correlatividades`** | [`.agents/skills/grafos-correlatividades`](file:///.agents/skills/grafos-correlatividades/SKILL.md) | Prerequisite DAG modeling, Kahn's cycle detection (`PlanLinterService`), Cytoscape, Dagre.          |
 | **`e2e-playwright`**          | [`.agents/skills/e2e-playwright`](file:///.agents/skills/e2e-playwright/SKILL.md)                   | Playwright E2E browser tests, `localStorage` fixtures, drag-and-drop verification.                  |
 | **`devops-amplify`**          | [`.agents/skills/devops-amplify`](file:///.agents/skills/devops-amplify/SKILL.md)                   | Multi-stage Docker, Docker Compose, environment injection (`set-env.js`), Cloudflare Pages & KV.              |
+| **`better-interface`**        | [`.agents/skills/better-interface`](file:///.agents/skills/better-interface/SKILL.md)               | Comprehensive interface reviews across accessibility, layout, writing, typography, colors, and polish.  |
+| **`better-ui`**               | [`.agents/skills/better-ui`](file:///.agents/skills/better-ui/SKILL.md)                             | Surface polish, optical alignment, border radius, elevation, shadows, icon states, and animations.  |
+| **`better-typography`**       | [`.agents/skills/better-typography`](file:///.agents/skills/better-typography/SKILL.md)             | Type scale, line heights, font features, wrapping, truncation, and punctuation rules.                 |
+| **`better-colors`**           | [`.agents/skills/better-colors`](file:///.agents/skills/better-colors/SKILL.md)                     | Color systems, semantic token naming, color formats, and WCAG contrast compliance.                  |
+| **`better-accessibility`**    | [`.agents/skills/better-accessibility`](file:///.agents/skills/better-accessibility/SKILL.md)       | WCAG 2.2 compliance, keyboard navigation, ARIA, focus rings, accessible names, and screen readers.  |
+| **`better-layout`**           | [`.agents/skills/better-layout`](file:///.agents/skills/better-layout/SKILL.md)                     | Grouping, alignment, reading order, responsive layout structure, and adaptivity.                     |
+| **`better-writing`**          | [`.agents/skills/better-writing`](file:///.agents/skills/better-writing/SKILL.md)                   | UI microcopy, labels, error messages, empty states, and action confirmation copy.                    |
+| **`interface-review`**        | [`.agents/skills/interface-review`](file:///.agents/skills/interface-review/SKILL.md)               | Diff-focused interface review across branches, PRs, or uncommitted changes.                          |
+| **`explain-interface`**       | [`.agents/skills/explain-interface`](file:///.agents/skills/explain-interface/SKILL.md)             | Deconstruction and explanation of web interfaces, effects, or layout implementations.               |
+| **`build-design`**            | [`.agents/skills/build-design`](file:///.agents/skills/build-design/SKILL.md)                       | Translating designs or mockups into production UI using existing tokens and components.              |
+| **`state-machine`**           | [`.agents/skills/state-machine`](file:///.agents/skills/state-machine/SKILL.md)                     | Isolated component state exploration with switcher and interactive mock scenarios.                  |
+| **`variant`**                 | [`.agents/skills/variant`](file:///.agents/skills/variant/SKILL.md)                                 | Generating and comparing multiple design variants for a given UI component.                          |
+| **`break`**                   | [`.agents/skills/break`](file:///.agents/skills/break/SKILL.md)                                     | Stress testing components under edge cases, extreme contents, and constrained spaces.                |
+| **`teardown`**                | [`.agents/skills/teardown`](file:///.agents/skills/teardown/SKILL.md)                               | Layered exploded-view technical illustrations and SVG diagrams of interface concepts.                |
+| **`afk`**                     | [`.agents/skills/afk`](file:///.agents/skills/afk/SKILL.md)                                         | Autonomous discovery and prototyping of UI enhancements and ideas.                                   |
 
 ---
 

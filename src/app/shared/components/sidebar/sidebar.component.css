@@ -8,6 +8,7 @@
 a[mat-list-item].mat-mdc-list-item, button[mat-list-item].mat-mdc-list-item, a[mat-list-item], button[mat-list-item] {
   border-radius: var(--radius-md);
   margin: 2px 4px;
+  min-height: 44px;
   color: var(--color-text-secondary);
   transition: all var(--transition-fast);
   background: transparent;
@@ -28,7 +29,8 @@ a.active-link.mat-mdc-list-item, a.active-link {
   font-weight: 600;
 }
 
-[data-theme="dark"] a.active-link.mat-mdc-list-item, [data-theme="dark"] a.active-link {
+:host-context([data-theme="dark"]) a.active-link.mat-mdc-list-item,
+:host-context([data-theme="dark"]) a.active-link {
   background-color: var(--brand-primary);
   color: var(--btn-primary-text);
 }

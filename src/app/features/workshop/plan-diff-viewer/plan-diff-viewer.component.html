@@ -4,7 +4,9 @@
       <div class="header-title">
         <h3>Inspeccionador de Cambios del Plan</h3>
       </div>
-      <button class="btn-close" (click)="closeModal.emit()">&times;</button>
+      <button mat-icon-button (click)="closeModal.emit()" aria-label="Cerrar modal">
+        <mat-icon>close</mat-icon>
+      </button>
     </header>
 
     <section class="modal-body">
@@ -60,8 +62,8 @@
     </section>
 
     <footer class="modal-footer">
-      <button class="btn btn-secondary" (click)="closeModal.emit()">Conservar Plan Actual</button>
-      <button class="btn btn-primary" (click)="applyChanges.emit()">Aplicar Cambios</button>
+      <button mat-stroked-button (click)="closeModal.emit()">Conservar Plan Actual</button>
+      <button mat-flat-button color="primary" (click)="applyChanges.emit()">Aplicar Cambios</button>
     </footer>
   </div>
 </div>

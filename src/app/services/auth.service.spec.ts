@@ -20,13 +20,11 @@ describe('AuthService', () => {
 
   beforeAll(() => {
     try {
-      if (typeof globalThis.localStorage === 'undefined' || !globalThis.localStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: mockLocalStorage,
-          writable: true,
-          configurable: true,
-        });
-      }
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: mockLocalStorage,
+        writable: true,
+        configurable: true,
+      });
     } catch {}
   });
 

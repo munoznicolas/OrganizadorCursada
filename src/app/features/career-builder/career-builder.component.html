@@ -25,20 +25,26 @@
       </div>
 
       <div class="header-inputs">
-        <input
-          type="text"
-          class="builder-input app-input"
-          placeholder="Nombre de la Carrera (ej: Licenciatura en Informática) *"
-          [ngModel]="careerName()"
-          (ngModelChange)="careerName.set($event)"
-        />
-        <input
-          type="text"
-          class="builder-input app-input"
-          placeholder="Universidad / Institución (ej: UNLP, UBA, UTN...) *"
-          [ngModel]="university()"
-          (ngModelChange)="university.set($event)"
-        />
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="builder-form-field">
+          <mat-label>Nombre de la Carrera *</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Ej: Licenciatura en Informática"
+            [ngModel]="careerName()"
+            (ngModelChange)="careerName.set($event)"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="builder-form-field">
+          <mat-label>Universidad / Institución *</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Ej: UNLP, UBA, UTN..."
+            [ngModel]="university()"
+            (ngModelChange)="university.set($event)"
+          />
+        </mat-form-field>
       </div>
     </div>
 

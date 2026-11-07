@@ -173,3 +173,18 @@ Follow domain-based organization defined in `.agents/rules/project-structure.md`
   ├── my-feature.component.css
   └── (my-feature.component.spec.ts optional)
   ```
+
+---
+
+## 7. Mandatory Angular Material UI Components
+
+All interactive UI elements, forms, dialogs, buttons, and navigation must use Angular Material primitives (`@angular/material/*`):
+
+- **Buttons**: `MatButtonModule` (`mat-flat-button`, `mat-stroked-button`, `mat-icon-button`).
+- **Form Controls**: `MatFormFieldModule`, `MatInputModule`, `MatSelectModule` (`<mat-form-field appearance="outline">`, `<input matInput>`, `<mat-select>`).
+- **Surfaces**: `MatCardModule` (`<mat-card appearance="outlined">`, `<mat-card-header>`, `<mat-card-content>`).
+- **Menus & Navigation**: `MatToolbarModule`, `MatSidenavModule`, `MatMenuModule`, `MatListModule`.
+- **Chips & Badges**: `MatChipsModule` (`mat-chip-set`, `mat-chip`), `MatBadgeModule`.
+- **Feedback**: `MatProgressBarModule`, `MatProgressSpinnerModule`, `MatSnackBarModule`.
+
+Never build custom unstyled buttons, selects, or modal backdrops when an Angular Material component is available.

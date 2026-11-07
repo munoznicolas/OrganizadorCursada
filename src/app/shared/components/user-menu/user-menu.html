@@ -8,6 +8,7 @@
     [matMenuTriggerFor]="googleUserMenu"
     #menuTrigger="matMenuTrigger"
     class="avatar-trigger-btn"
+    aria-label="Menú de cuenta de Google"
     [matTooltip]="user.email || 'Cuenta de Google'"
   >
     @if (user.photoURL) {

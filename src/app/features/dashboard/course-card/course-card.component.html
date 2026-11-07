@@ -3,18 +3,22 @@
   [attr.id]="'mat-' + course().id"
   [class.available]="allRequirementsMet() && course().status === 'pending'"
   [class.on-hold-card]="course().status === 'on-hold'"
-  (click)="onCardClick()"
-  (keydown)="onKeyDown($event)"
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()"
-  role="button"
-  tabindex="0"
-  [attr.aria-label]="ariaLabel()"
 >
-  <span>{{ course().name }}</span>
-  @if (statusTag()) {
-    <span class="tag" [class.on-hold-tag]="course().status === 'on-hold'">{{ statusTag() }}</span>
-  }
+  <div
+    class="materia-main-action"
+    role="button"
+    tabindex="0"
+    (click)="onCardClick()"
+    (keydown)="onKeyDown($event)"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <span class="materia-name-text">{{ course().name }}</span>
+    @if (statusTag()) {
+      <span class="tag" [class.on-hold-tag]="course().status === 'on-hold'">{{ statusTag() }}</span>
+    }
+  </div>
   @if (course().status === 'on-hold') {
     <button
       type="button"

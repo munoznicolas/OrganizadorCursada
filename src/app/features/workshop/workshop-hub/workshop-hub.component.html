@@ -5,51 +5,103 @@
     </div>
   </header>
 
-  <main class="app-card workshop-card-body">
+  <mat-card appearance="outlined" class="workshop-card-body">
     <div class="search-bar-row">
-      <input
-        type="text"
-        class="search-input app-input"
-        placeholder="Buscar por universidad, carrera o facultad..."
-        [(ngModel)]="searchQuery"
-        data-testid="search-input"
-      />
-      <select
-        [(ngModel)]="selectedUniversity"
-        class="filter-select app-input"
-        aria-label="Filtrar por universidad"
-        data-testid="filter-university"
-      >
-        <option value="all">Todas las Universidades</option>
-        @for (univ of universities; track univ) {
-          <option [value]="univ">{{ univ }}</option>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-form-field">
+        <mat-label>Buscar por universidad, carrera o facultad</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Buscar..."
+          [(ngModel)]="searchQuery"
+          data-testid="search-input"
+          aria-label="Buscar por universidad, carrera o facultad"
+        />
+        @if (searchQuery) {
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="searchQuery = ''"
+            aria-label="Limpiar búsqueda"
+            type="button"
+          >
+            <mat-icon>clear</mat-icon>
+          </button>
         }
-      </select>
-      <select
-        [(ngModel)]="selectedFaculty"
-        class="filter-select app-input"
-        aria-label="Filtrar por facultad"
-        data-testid="filter-faculty"
-      >
-        <option value="all">Todas las Facultades</option>
-        @for (fac of faculties; track fac) {
-          <option [value]="fac">{{ fac }}</option>
-        }
-      </select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-form-field">
+        <mat-label>Universidad</mat-label>
+        <mat-select
+          [(ngModel)]="selectedUniversity"
+          aria-label="Filtrar por universidad"
+          data-testid="filter-university"
+        >
+          <mat-option value="all">Todas las Universidades</mat-option>
+          @for (univ of universities; track univ) {
+            <mat-option [value]="univ">{{ univ }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-form-field">
+        <mat-label>Facultad</mat-label>
+        <mat-select
+          [(ngModel)]="selectedFaculty"
+          aria-label="Filtrar por facultad"
+          data-testid="filter-faculty"
+        >
+          <mat-option value="all">Todas las Facultades</mat-option>
+          @for (fac of faculties; track fac) {
+            <mat-option [value]="fac">{{ fac }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="table-container">
       <table class="workshop-table" data-testid="workshop-table">
         <thead>
           <tr>
-            <th class="sortable" (click)="toggleSort('name')" data-testid="sort-name">
-              Carrera <span class="sort-icon">{{ getSortIcon('name') }}</span>
+            <th
+              class="sortable"
+              (click)="toggleSort('name')"
+              (keydown.enter)="toggleSort('name')"
+              (keydown.space)="toggleSort('name'); $event.preventDefault()"
+              tabindex="0"
+              role="columnheader"
+              [attr.aria-sort]="sortColumn === 'name' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'"
+              data-testid="sort-name"
+              aria-label="Ordenar por Carrera"
+            >
+              Carrera <span class="sort-icon" aria-hidden="true">{{ getSortIcon('name') }}</span>
             </th>
-            <th class="sortable" (click)="toggleSort('faculty')" data-testid="sort-faculty">
-              Facultad <span class="sort-icon">{{ getSortIcon('faculty') }}</span>
+            <th
+              class="sortable"
+              (click)="toggleSort('faculty')"
+              (keydown.enter)="toggleSort('faculty')"
+              (keydown.space)="toggleSort('faculty'); $event.preventDefault()"
+              tabindex="0"
+              role="columnheader"
+              [attr.aria-sort]="sortColumn === 'faculty' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'"
+              data-testid="sort-faculty"
+              aria-label="Ordenar por Facultad"
+            >
+              Facultad <span class="sort-icon" aria-hidden="true">{{ getSortIcon('faculty') }}</span>
             </th>
-            <th class="sortable" (click)="toggleSort('university')" data-testid="sort-university">
-              Universidad <span class="sort-icon">{{ getSortIcon('university') }}</span>
+            <th
+              class="sortable"
+              (click)="toggleSort('university')"
+              (keydown.enter)="toggleSort('university')"
+              (keydown.space)="toggleSort('university'); $event.preventDefault()"
+              tabindex="0"
+              role="columnheader"
+              [attr.aria-sort]="sortColumn === 'university' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'"
+              data-testid="sort-university"
+              aria-label="Ordenar por Universidad"
+            >
+              Universidad <span class="sort-icon" aria-hidden="true">{{ getSortIcon('university') }}</span>
             </th>
             <th class="text-right">Acción</th>
           </tr>
@@ -66,13 +118,24 @@
             <td class="col-actions text-right">
               @if (isSubscribed(item)) {
                 <button
-                  class="btn btn-secondary btn-unsubscribe"
+                  mat-stroked-button
+                  color="warn"
+                  class="btn-unsubscribe"
                   (click)="unsubscribePlan(item, $event)"
                 >
-                  Desuscribirse
+                  <mat-icon>remove_circle_outline</mat-icon>
+                  <span>Desuscribirse</span>
                 </button>
               } @else {
-                <button class="btn btn-subscribe" (click)="subscribePlan(item)">Suscribirse</button>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  class="btn-subscribe"
+                  (click)="subscribePlan(item)"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                  <span>Suscribirse</span>
+                </button>
               }
             </td>
           </tr>
@@ -80,8 +143,9 @@
             <tr class="empty-row">
               <td colspan="4" class="empty-message">
                 <p>No se encontraron planes de estudio que coincidan con la búsqueda.</p>
-                <button type="button" class="btn btn-secondary" (click)="resetFilters()">
-                  Restablecer filtros
+                <button mat-stroked-button type="button" (click)="resetFilters()">
+                  <mat-icon>refresh</mat-icon>
+                  <span>Restablecer filtros</span>
                 </button>
               </td>
             </tr>
@@ -89,5 +153,5 @@
         </tbody>
       </table>
     </div>
-  </main>
+  </mat-card>
 </div>
