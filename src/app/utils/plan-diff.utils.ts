@@ -34,10 +34,10 @@ export function comparePlanManifests(
         });
       }
 
-      const oldCursar = (oldCourse.cursarReq || []).slice().sort().join(',');
-      const newCursar = (newCourse.cursarReq || []).slice().sort().join(',');
-      const oldAprobar = (oldCourse.aprobarReq || []).slice().sort().join(',');
-      const newAprobar = (newCourse.aprobarReq || []).slice().sort().join(',');
+      const oldCursar = (oldCourse.cursarReq || []).slice().sort((a, b) => a.localeCompare(b)).join(',');
+      const newCursar = (newCourse.cursarReq || []).slice().sort((a, b) => a.localeCompare(b)).join(',');
+      const oldAprobar = (oldCourse.aprobarReq || []).slice().sort((a, b) => a.localeCompare(b)).join(',');
+      const newAprobar = (newCourse.aprobarReq || []).slice().sort((a, b) => a.localeCompare(b)).join(',');
 
       if (oldCursar !== newCursar || oldAprobar !== newAprobar) {
         conflicts.push({
