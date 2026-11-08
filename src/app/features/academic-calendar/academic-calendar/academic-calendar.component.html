@@ -7,35 +7,60 @@
     />
   } @else {
     <div class="page-header app-page-header">
-      <div class="title-row">
+      <div class="header-title-group">
         <h1 class="app-page-title">
-          Calendario Académico
+          Plan de cursada
         </h1>
-
-        <button
-          mat-flat-button
-          color="primary"
-          type="button"
-          class="btn-export-trigger"
-          (click)="openExportModal()"
-          title="Exportar cuatrimestre a Google Calendar / iCal"
-        >
-          <mat-icon>event_available</mat-icon>
-          Exportar Calendario
-        </button>
       </div>
 
-      <!-- Multiple Calendars Selector Bar -->
+      <!-- Plans Tabs Strip inside Title Container -->
       <div class="calendar-tabs-bar" role="tablist" aria-label="Calendarios disponibles">
-        <div class="calendar-tabs-scroll">
-          @for (planItem of plans(); track planItem.id) {
-            <button
-              type="button"
-              role="tab"
+      <div class="calendar-tabs-scroll">
+        @for (planItem of plans(); track planItem.id) {
+          @if (planItem.id === currentRouteId() && isEditingTitle() && isEditable()) {
+            <!-- Inline editing state for active chip -->
+            <div class="calendar-tab-chip active editing" role="tab" [attr.aria-selected]="true">
+              <mat-icon class="tab-icon edit-icon">edit_calendar</mat-icon>
+              <input
+                type="text"
+                class="inline-tab-input"
+                [(ngModel)]="editablePlanId"
+                placeholder="Nombre del Plan"
+                (keydown.enter)="confirmEditTitle()"
+                (keydown.escape)="cancelEditTitle()"
+                aria-label="Nombre del plan"
+              />
+              <button
+                mat-icon-button
+                type="button"
+                class="chip-inline-action-btn confirm-btn"
+                aria-label="Guardar cambios"
+                (click)="confirmEditTitle()"
+                title="Guardar cambios"
+              >
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                class="chip-inline-action-btn cancel-btn"
+                aria-label="Cancelar edición"
+                (click)="cancelEditTitle()"
+                title="Cancelar edición"
+              >
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </div>
+          } @else {
+            <!-- Normal state for tab chip -->
+            <div
               class="calendar-tab-chip"
               [class.active]="planItem.id === currentRouteId()"
               [attr.aria-selected]="planItem.id === currentRouteId()"
+              role="tab"
+              tabindex="0"
               (click)="selectPlan(planItem.id)"
+              (keydown.enter)="selectPlan(planItem.id)"
             >
               @if (planItem.id === '1') {
                 <mat-icon class="tab-icon lock-icon">lock</mat-icon>
@@ -43,157 +68,138 @@
                 <mat-icon class="tab-icon edit-icon">edit_calendar</mat-icon>
               }
               <span class="tab-label">{{ getPlanDisplayName(planItem) }}</span>
+
               @if (planItem.id === '1') {
                 <span class="badge-read-only">Oficial</span>
               }
-            </button>
+
+              <!-- Integrated actions directly on the active editable chip -->
+              @if (planItem.id === currentRouteId() && isEditable()) {
+                <div class="chip-actions-group">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    class="chip-action-btn edit-chip-btn"
+                    aria-label="Editar título y fechas"
+                    (click)="$event.stopPropagation(); toggleEditTitle()"
+                    title="Editar título y fechas"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    type="button"
+                    class="chip-action-btn delete-chip-btn"
+                    aria-label="Eliminar calendario local"
+                    (click)="$event.stopPropagation(); deletePlan()"
+                    title="Eliminar este calendario local"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
           }
+        }
 
-          <button
-            mat-stroked-button
-            type="button"
-            class="add-calendar-chip-btn"
-            (click)="addCalendarPlan()"
-            title="Crear un nuevo calendario local"
-            aria-label="Agregar nuevo calendario académico"
-          >
-            <mat-icon>add</mat-icon>
-            <span>Nuevo Calendario</span>
-          </button>
-        </div>
+        <button
+          mat-stroked-button
+          type="button"
+          class="add-calendar-chip-btn"
+          (click)="addCalendarPlan()"
+          title="Crear un nuevo calendario local"
+          aria-label="Agregar nuevo calendario académico"
+        >
+          <mat-icon>add</mat-icon>
+          <span>Nuevo Calendario</span>
+        </button>
       </div>
-
-      @if (planId()) {
-        <div class="plan-header-row">
-          <div class="plan-title-container">
-            @if (!isEditingTitle()) {
-              <div class="plan-title-wrapper">
-                <h2 class="plan-title">
-                  {{ currentRouteId() === '1' ? getPlanDisplayName({ id: '1', label: planId()! }) : planId() }}
-                </h2>
-
-                @if (!isEditable()) {
-                  <span class="read-only-badge" title="El calendario oficial de la carrera es de solo lectura">
-                    <mat-icon>lock</mat-icon> Solo lectura (Oficial)
-                  </span>
-                } @else {
-                  <div class="plan-action-buttons">
-                    <button
-                      mat-icon-button
-                      type="button"
-                      class="edit-title-btn"
-                      aria-label="Editar título y fechas del calendario"
-                      (click)="toggleEditTitle()"
-                      title="Editar título y fechas"
-                    >
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button
-                      mat-icon-button
-                      type="button"
-                      class="delete-plan-btn"
-                      aria-label="Eliminar calendario local"
-                      (click)="deletePlan()"
-                      title="Eliminar este calendario local"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                }
-              </div>
-            } @else {
-              <div class="edit-title-form">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="editable-plan-field">
-                  <mat-label>Título del Calendario</mat-label>
-                  <input
-                    matInput
-                    type="text"
-                    [(ngModel)]="editablePlanId"
-                    placeholder="Subtítulo o nombre"
-                  />
-                </mat-form-field>
-                <button
-                  mat-icon-button
-                  type="button"
-                  aria-label="Guardar cambios"
-                  (click)="confirmEditTitle()"
-                  title="Guardar cambios"
-                >
-                  <mat-icon color="primary">check_circle</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  type="button"
-                  aria-label="Cancelar edición"
-                  (click)="cancelEditTitle()"
-                  title="Cancelar edición"
-                >
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </div>
-            }
-          </div>
-
-          <div class="year-selector">
-            @if (!isEditingTitle()) {
-              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="year-input-field">
-                <mat-label>Año Inicial</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [value]="startingYear()"
-                  [disabled]="true"
-                  min="1900"
-                  max="2100"
-                />
-              </mat-form-field>
-            } @else {
-              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="year-input-field">
-                <mat-label>Año Inicial</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [(ngModel)]="editableStartingYear"
-                  min="1900"
-                  max="2100"
-                />
-              </mat-form-field>
-            }
-          </div>
-        </div>
-      }
+    </div>
     </div>
 
     @for (item of displaySemesters(); track item.id; let i = $index; let last = $last) {
       <section class="semester-section">
-        <div class="semester-header">
-          <h2 class="semester-title">{{ item.label }}</h2>
-          @if (isEditingTitle() && isEditable()) {
-            <div class="semester-date-inputs">
-              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sem-date-field">
-                <mat-label>Inicio</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="DD/MM"
-                  [ngModel]="getEditableSemesterDates(item.id).startDate"
-                  (ngModelChange)="updateSemesterDate(item.id, 'startDate', $event)"
-                  maxlength="5"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sem-date-field">
-                <mat-label>Fin</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="DD/MM"
-                  [ngModel]="getEditableSemesterDates(item.id).endDate"
-                  (ngModelChange)="updateSemesterDate(item.id, 'endDate', $event)"
-                  maxlength="5"
-                />
-              </mat-form-field>
-            </div>
-          }
+        <div class="semester-header" [class.first-semester-header]="i === 0">
+          <div class="semester-title-group">
+            <h2 class="semester-title">
+              @if (isEditable()) {
+                <span class="title-prefix">Año</span>
+                <button
+                  mat-button
+                  type="button"
+                  class="ghost-year-btn"
+                  [matMenuTriggerFor]="semesterYearMenu"
+                  matTooltip="Cambiar año de cursada (recalcula la cronología hacia adelante)"
+                  matTooltipPosition="above"
+                  [attr.aria-label]="'Cambiar año para cuatrimestre ' + item.q"
+                >
+                  <span class="ghost-year-number">{{ item.year }}</span>
+                  <mat-icon class="ghost-year-chevron" iconPositionEnd>expand_more</mat-icon>
+                </button>
+                <mat-menu #semesterYearMenu="matMenu" class="year-selection-menu">
+                  @for (yr of getValidYearsForSemester(i); track yr) {
+                    <button
+                      mat-menu-item
+                      (click)="setSemesterYear(item.id, yr)"
+                      [class.selected-year-item]="yr === item.year"
+                    >
+                      <span class="menu-year-text">{{ yr }}</span>
+                      @if (yr === item.year) {
+                        <mat-icon class="check-icon">check</mat-icon>
+                      }
+                    </button>
+                  }
+                </mat-menu>
+                <span class="title-suffix">– Cuatrimestre {{ item.q }}</span>
+                @if (item.startDate && item.endDate) {
+                  <span class="semester-dates">({{ item.startDate }} - {{ item.endDate }})</span>
+                }
+              } @else {
+                {{ item.label }}
+              }
+            </h2>
+          </div>
+
+          <div class="semester-header-actions">
+            @if (isEditingTitle() && isEditable()) {
+              <div class="semester-date-inputs">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sem-date-field">
+                  <mat-label>Inicio</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="DD/MM"
+                    [ngModel]="getEditableSemesterDates(item.id).startDate"
+                    (ngModelChange)="updateSemesterDate(item.id, 'startDate', $event)"
+                    maxlength="5"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sem-date-field">
+                  <mat-label>Fin</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="DD/MM"
+                    [ngModel]="getEditableSemesterDates(item.id).endDate"
+                    (ngModelChange)="updateSemesterDate(item.id, 'endDate', $event)"
+                    maxlength="5"
+                  />
+                </mat-form-field>
+              </div>
+            }
+
+            <button
+              mat-button
+              type="button"
+              class="btn-semester-export"
+              (click)="openExportModal(item)"
+              title="Exportar cuatrimestre a Google Calendar / iCal"
+              aria-label="Exportar cuatrimestre"
+            >
+              <mat-icon>event_available</mat-icon>
+              <span>Exportar</span>
+            </button>
+          </div>
         </div>
         <app-calendar
           [coursesOverride]="item.courses"

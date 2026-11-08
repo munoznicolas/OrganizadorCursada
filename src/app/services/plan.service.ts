@@ -19,6 +19,7 @@ export interface SemesterSlot {
   id: string;
   courseYear: number;
   courseQ: number;
+  calendarYear?: number;
   startDate?: string;
   endDate?: string;
 }

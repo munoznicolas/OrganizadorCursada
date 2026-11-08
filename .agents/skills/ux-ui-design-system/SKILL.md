@@ -107,20 +107,35 @@ background-color: var(--status-unlocks-bg); /* Unlocked successor */
 ## 4. Responsive Layouts & Complex Views
 
 - **Course Grid (`/home`)**:
-  - Organized by academic years and semesters.
-  - On mobile screens (`< 768px`), layout must adapt to horizontal scrolling or chronological collapsible accordions.
+   - Organized by academic years and semesters.
+   - On mobile screens (`< 768px`), layout must adapt to horizontal scrolling or chronological collapsible accordions.
 - **Weekly Timetable (`/myWeek`)**:
-  - Monday-through-Saturday grid matrix.
-  - On mobile screens, provide day-by-day tabs to prevent cramped lesson slots.
+   - Monday-through-Saturday grid matrix.
+   - On mobile screens, provide day-by-day tabs to prevent cramped lesson slots.
 - **Fluid Transitions**:
-  - Use `var(--transition-fast)` (`0.15s`) for micro-interactions and `var(--transition-normal)` (`0.25s`) for dialogs and accordions.
+   - Use `var(--transition-fast)` (`0.15s`) for micro-interactions and `var(--transition-normal)` (`0.25s`) for dialogs and accordions.
 
 ---
 
-## 5. UX/UI Review Checklist
+## 5. Information Hierarchy, Inline Controls & Visual Prototyping
+
+1. **Zero Proximity Redundancy**:
+   - Never place a configuration pill, badge, or input next to a heading or card header that already displays that same datum (e.g., placing `Año de inicio: 2026` next to `Año 2026 – Cuatrimestre 1`).
+   - Instead, make the datum token inside the heading itself the interactive trigger (**Ghost Link / Ghost Trigger pattern**).
+2. **Inline Ghost Trigger Affordance**:
+   - When a word or number inside a heading is interactive (`<button mat-button [matMenuTriggerFor]="...">`), keep the text in the heading's native typography at rest, accompanied by a right-aligned trailing caret (`<mat-icon iconPositionEnd>expand_more</mat-icon>`) always visible in a subtle grey tone (`var(--neutral-500)`).
+   - On `:hover` and `:focus-visible`, highlight the trigger background (`var(--status-coursing-bg)`) and transition both the text and caret to `var(--brand-primary)`.
+3. **Visual Snippets Before UI Implementation**:
+   - When proposing multiple UI/UX design alternatives in `/plan` mode, render cropped visual screenshots (via Playwright) of just the target component area so proportions, baselines, and spacing can be evaluated visually before writing production code.
+
+---
+
+## 6. UX/UI Review Checklist
 
 - [ ] Was the component inspected in both light and dark themes?
 - [ ] Do all colors resolve to CSS variables (`var(--...)`) defined in `src/styles.css`?
+- [ ] Is there zero information redundancy between headings and adjacent controls?
+- [ ] Do inline triggers use `iconPositionEnd` for trailing carets and avoid 56px `<mat-form-field>` wrappers inside headings?
 - [ ] Do buttons implement `:hover`, `:active`, and `:focus-visible` states?
 - [ ] Does text contrast satisfy WCAG AA requirements in both themes?
 - [ ] Do course cards visibly communicate their canonical status without ambiguity?

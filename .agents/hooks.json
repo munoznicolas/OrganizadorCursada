@@ -1,4 +1,14 @@
 {
+  "dev-server-init": {
+    "enabled": true,
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node scripts/session_start.js",
+        "timeout": 15
+      }
+    ]
+  },
   "command-guard": {
     "enabled": true,
     "PreToolUse": [

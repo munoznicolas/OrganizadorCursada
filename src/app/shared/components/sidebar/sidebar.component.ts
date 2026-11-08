@@ -25,7 +25,7 @@ export class SidebarComponent {
   items = computed<SidebarItem[]>(() => [
     { label: 'Home', route: '/home', icon: 'home' },
     { label: 'Mi Semana', route: '/myWeek', icon: 'calendar_view_week' },
-    { label: 'Calendario Académico', route: '/academicCalendar', icon: 'date_range' },
+    { label: 'Plan de cursada', route: '/academicCalendar', icon: 'date_range' },
     { label: 'Workshop', route: '/workshop', icon: 'store' },
     { label: 'Publicar Plan', route: '/publish', icon: 'publish' },
   ]);

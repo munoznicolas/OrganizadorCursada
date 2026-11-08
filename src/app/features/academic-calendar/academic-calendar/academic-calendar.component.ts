@@ -10,7 +10,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../../../services/course.service';
-import { PlanService } from '../../../services/plan.service';
+import { PlanService, SemesterSlot } from '../../../services/plan.service';
 import { ToastService } from '../../../services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 import { Course } from '../../../models/course';
 import { Calendar } from '../../schedule/calendar/calendar';
 import { ExportCalendarModalComponent } from '../../schedule/export-calendar-modal/export-calendar-modal.component';
@@ -50,6 +52,8 @@ interface DisplaySemester {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule,
+    MatMenuModule,
     FormsModule,
     ExportCalendarModalComponent,
     NoPlanSelectedComponent,
@@ -65,9 +69,17 @@ export class AcademicCalendarComponent {
   private readonly toastService = inject(ToastService);
 
   readonly plans = this.planService.plans;
+  readonly availableYears = computed(() => {
+    const current = new Date().getFullYear();
+    const list: number[] = [];
+    for (let y = current - 6; y <= current + 5; y++) {
+      list.push(y);
+    }
+    return list;
+  });
   readonly showExportModal = signal<boolean>(false);
 
-  openExportModal(): void {
+  openExportModal(_item?: DisplaySemester): void {
     this.showExportModal.set(true);
   }
 
@@ -80,7 +92,7 @@ export class AcademicCalendarComponent {
     return id ? this.planService.getStartingYear(id) : new Date().getFullYear();
   });
   isEditingTitle = signal<boolean>(false);
-  editableTitle = signal<string>('Calendario Académico');
+  editableTitle = signal<string>('Plan de cursada');
   editablePlanId = signal<string | null>(null);
   editableStartingYear = signal<number>(new Date().getFullYear());
   editableSemesterDates = signal<Map<string, { startDate?: string; endDate?: string }>>(new Map());
@@ -92,6 +104,13 @@ export class AcademicCalendarComponent {
   planId = computed(() => {
     const id = this.currentRouteId();
     return id ? (this.planService.getPlanLabel(id) ?? `Plan de estudio ${id}`) : null;
+  });
+
+  readonly currentPlanDisplayName = computed(() => {
+    const id = this.currentRouteId();
+    if (!id) return null;
+    const label = this.planService.getPlanLabel(id) ?? '';
+    return this.getPlanDisplayName({ id, label });
   });
 
   isEditable = computed(() => {
@@ -127,8 +146,7 @@ export class AcademicCalendarComponent {
     if (plans.length === 0) {
       untracked(() => {
         const careerName = this.careerService.activeCareer().name;
-        const label = careerName && careerName !== 'Sin Plan' ? careerName : 'Calendario Oficial';
-        this.planService.addPlan({ id: '1', label });
+        this.planService.addPlan({ id: '1', label: 'Plan Oficial' });
       });
       plans = this.planService.plans();
     }
@@ -184,8 +202,15 @@ export class AcademicCalendarComponent {
     // Read directly from the plan by route ID, bypassing the async currentPlanIdSignal
     const courses = routeId ? this.courseService.getCoursesForPlan(routeId) : [];
 
+    let currentYear = starting;
+
     return list.map((item, position) => {
-      const displayYear = starting + Math.floor(position / 2);
+      const defaultYear = starting + Math.floor(position / 2);
+      const configuredYear = item.calendarYear !== undefined ? item.calendarYear : defaultYear;
+      if (configuredYear > currentYear) {
+        currentYear = configuredYear;
+      }
+      const displayYear = currentYear;
       const displayQ = (position % 2) + 1;
       const semesterCourses =
         item.courseYear > 0
@@ -211,6 +236,56 @@ export class AcademicCalendarComponent {
     });
   });
 
+  getValidYearsForSemester(index: number): number[] {
+    const semesters = this.displaySemesters();
+    // Cannot time travel: minimum year is the previous semester's year
+    const minYear =
+      index > 0 && semesters[index - 1]
+        ? semesters[index - 1].year
+        : new Date().getFullYear() - 6;
+    const maxYear = new Date().getFullYear() + 8;
+    const years: number[] = [];
+    for (let y = minYear; y <= maxYear; y++) {
+      years.push(y);
+    }
+    return years;
+  }
+
+  setSemesterYear(semesterId: string, year: number): void {
+    const planId = this.currentRouteId();
+    if (!planId) return;
+
+    const list = this.semesterList();
+    const index = list.findIndex((s) => s.id === semesterId);
+    if (index === -1) return;
+
+    const semesters = this.displaySemesters();
+    const prevYear = index > 0 && semesters[index - 1] ? semesters[index - 1].year : 1900;
+    const validatedYear = Math.max(year, prevYear);
+
+    if (index === 0) {
+      this.editableStartingYear.set(validatedYear);
+      this.planService.setStartingYear(planId, validatedYear);
+    }
+
+    let runningYear = validatedYear;
+    const updated: SemesterSlot[] = list.map((slot, idx) => {
+      if (idx < index) {
+        return slot;
+      }
+      if (idx === index) {
+        runningYear = validatedYear;
+        return { ...slot, calendarYear: validatedYear };
+      }
+      const currentSlotYear = slot.calendarYear ?? (this.startingYear() + Math.floor(idx / 2));
+      const nextYear = Math.max(currentSlotYear, runningYear);
+      runningYear = nextYear;
+      return { ...slot, calendarYear: nextYear };
+    });
+
+    this.planService.setSemesterList(planId, updated);
+  }
+
   setStartingYear(year: number | Event): void {
     let yearValue: number;
     if (year instanceof Event) {
@@ -220,16 +295,22 @@ export class AcademicCalendarComponent {
       yearValue = year;
     }
     const planId = this.currentRouteId();
-    if (planId && !Number.isNaN(yearValue)) {
-      this.planService.setStartingYear(planId, yearValue);
+    if (planId && !Number.isNaN(yearValue) && yearValue >= 1990 && yearValue <= 2100) {
+      const firstSlot = this.semesterList()[0];
+      if (firstSlot) {
+        this.setSemesterYear(firstSlot.id, yearValue);
+      } else {
+        this.editableStartingYear.set(yearValue);
+        this.planService.setStartingYear(planId, yearValue);
+      }
     }
   }
 
   toggleEditTitle(): void {
     if (!this.isEditingTitle()) {
       // Entering edit mode - copy current values
-      this.editableTitle.set('Calendario Académico');
-      this.editablePlanId.set(this.planId());
+      this.editableTitle.set('Plan de cursada');
+      this.editablePlanId.set(this.currentPlanDisplayName());
       this.editableStartingYear.set(this.startingYear());
       // Copy semester dates into editable map
       const dateMap = new Map<string, { startDate?: string; endDate?: string }>();
@@ -246,7 +327,7 @@ export class AcademicCalendarComponent {
     const newYear = this.editableStartingYear();
     const planId = this.currentRouteId();
 
-    if (planId && newLabel && newLabel !== this.planId()) {
+    if (planId && newLabel && newLabel !== this.planService.getPlanLabel(planId)) {
       this.planService.updatePlanLabel(planId, newLabel);
     }
 
@@ -417,12 +498,12 @@ export class AcademicCalendarComponent {
 
   getPlanDisplayName(plan: { id: string; label: string }): string {
     if (plan.id === '1') {
-      const activeCareerName = this.careerService.activeCareer().name;
-      if (activeCareerName && activeCareerName !== 'Sin Plan') {
-        return activeCareerName;
-      }
-      return 'Calendario Oficial';
+      return 'Plan Oficial';
     }
-    return plan.label || `Calendario ${plan.id}`;
+    const activeCareerName = this.careerService.activeCareer().name;
+    if (plan.label && plan.label !== activeCareerName && plan.label !== 'Sin Plan') {
+      return plan.label;
+    }
+    return 'Mi Planificación';
   }
 }

@@ -68,7 +68,10 @@ describe('storage-sanitizer.utils', () => {
     it('should validate valid semester slots', () => {
       const valid: SemesterSlot = { id: 's1', courseYear: 1, courseQ: 1 };
       expect(isValidSemesterSlot(valid)).toBe(true);
+      expect(isValidSemesterSlot({ id: 's1', courseYear: 1, courseQ: 1, calendarYear: 2026 })).toBe(true);
       expect(isValidSemesterSlot({ id: 's1', courseYear: 'invalid', courseQ: 1 })).toBe(false);
+      expect(isValidSemesterSlot({ id: 's1', courseYear: 1, courseQ: 1, calendarYear: 1800 })).toBe(false);
+      expect(isValidSemesterSlot({ id: 's1', courseYear: 1, courseQ: 1, calendarYear: 'invalid' as unknown as number })).toBe(false);
     });
 
     it('should sanitize semester slots array', () => {

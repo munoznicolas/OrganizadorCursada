@@ -36,9 +36,15 @@ export function isValidSemesterSlot(val: unknown): val is SemesterSlot {
   const validId = typeof s.id === 'string' && s.id.trim() !== '';
   const validYear = typeof s.courseYear === 'number' && !Number.isNaN(s.courseYear);
   const validQ = typeof s.courseQ === 'number' && !Number.isNaN(s.courseQ);
+  const validCalendarYear =
+    s.calendarYear === undefined ||
+    (typeof s.calendarYear === 'number' &&
+      !Number.isNaN(s.calendarYear) &&
+      s.calendarYear >= 1900 &&
+      s.calendarYear <= 2100);
   const validStartDate = s.startDate === undefined || typeof s.startDate === 'string';
   const validEndDate = s.endDate === undefined || typeof s.endDate === 'string';
-  return validId && validYear && validQ && validStartDate && validEndDate;
+  return validId && validYear && validQ && validCalendarYear && validStartDate && validEndDate;
 }
 
 export function sanitizeSemesterSlots(parsed: unknown): SemesterSlot[] {

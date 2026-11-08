@@ -53,7 +53,7 @@ To prevent conflicts of interest and enforce rigorous software engineering stand
 
 - **`analyst`**: Specifies requirements, defines Gherkin scenarios, and creates issues exclusively in [GitHub Issues](https://github.com/nitricx/OrganizadorCursada/issues) (`gh issue`). Local markdown tickets in repository are strictly prohibited. _Prohibited from touching `src/app/`_.
 - **`developer`**: Implements business logic in services and presentation components with mandatory unit tests. _Prohibited from self-approving or closing tickets without QA_.
-- **`qa`**: Audits features against acceptance criteria, runs test suites (`npm test`, `npm run build`, `npm run test:e2e`), and certifies or rejects tickets. _Prohibited from modifying feature code directly_.
+- **`qa`**: Audits features against acceptance criteria, runs test suites (`npx ng test --no-watch`, `npm run build`, `npm run test:e2e`), and certifies or rejects tickets. _Prohibited from modifying feature code directly_.
 - **`gitflow`**: Manages semantic branches, Conventional Commits, and PRs once a ticket is marked `QA_VERIFIED`.
 
 ---
@@ -93,11 +93,17 @@ Activate or consult the relevant skill for each task:
 
 ---
 
-## 5. Essential Verification Commands
+## 5. Essential Verification Commands & Tooling Hygiene
+
+- **Native File Tools First**: Always use native agent file tools (`read_file`, `write_file`, `edit_file`, `grep_search`) to read and modify repository files. Note that repository files on Windows may use `CRLF` (`\r\n`) line endings, which can cause multiline `edit_file` targets to fail matching; when modifying larger blocks in CRLF files, read the full file and use `write_file` (`Overwrite: true`) rather than spawning `node -e` or PowerShell one-liners.
+- **Playwright Visual Verification Scripts**: When capturing cropped UI snippets with Playwright, write a standalone `.js` script to the scratch directory rather than passing multiline strings to `node -e` in PowerShell (which strips inner quotes and interpolates `$` variables).
 
 ```bash
-# Run unit test suite (Vitest)
-npm test -- --watch=false
+# Serve application locally in development mode (immediate command when asked to host/serve locally)
+npm start
+
+# Run unit test suite (Angular 21 / Vitest builder non-interactive mode)
+npx ng test --no-watch
 
 # Configure environment and build production bundle
 npm run config:env

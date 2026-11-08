@@ -8,6 +8,7 @@ import { vi } from 'vitest';
 import { AcademicCalendarComponent } from './academic-calendar.component';
 import { CourseService } from '../../../services/course.service';
 import { CareerService } from '../../../services/career.service';
+import { PlanService } from '../../../services/plan.service';
 import { ToastService } from '../../../services/toast.service';
 import { Course, DayOfWeek } from '../../../models/course';
 
@@ -291,6 +292,60 @@ describe('AcademicCalendarComponent – semester insertion and course movement',
     it('should prevent deleting Plan 1 (default official calendar)', () => {
       component.deletePlan();
       expect(component.plans().some((p) => p.id === '1')).toBe(true);
+    });
+  });
+
+  describe('Academic Calendar UI Redundancy & Labels', () => {
+    it('should return "Plan Oficial" for official plan (id 1) regardless of career name', () => {
+      expect(component.getPlanDisplayName({ id: '1', label: 'Ingeniería en Sistemas de Información' })).toBe('Plan Oficial');
+    });
+
+    it('should return "Mi Planificación" when a custom plan label matches the career name', () => {
+      const careerService = TestBed.inject(CareerService);
+      careerService.selectCareer('ing-sistemas');
+      const activeCareerName = careerService.activeCareer().name;
+
+      expect(component.getPlanDisplayName({ id: 'ing-sistemas', label: activeCareerName })).toBe('Mi Planificación');
+    });
+
+    it('should return the custom plan label if distinct from career name', () => {
+      expect(component.getPlanDisplayName({ id: 'custom-2', label: 'Plan Acelerado 2026' })).toBe('Plan Acelerado 2026');
+    });
+  });
+
+  describe('Chronological Monotonicity and No Time Travel', () => {
+    it('should ensure getValidYearsForSemester never allows a year earlier than previous semester', () => {
+      const semesters = component.displaySemesters();
+      expect(semesters.length).toBeGreaterThan(1);
+
+      const firstYear = semesters[0].year;
+      const validYearsForSecond = component.getValidYearsForSemester(1);
+
+      expect(validYearsForSecond.every((y) => y >= firstYear)).toBe(true);
+      expect(validYearsForSecond.includes(firstYear - 1)).toBe(false);
+    });
+
+    it('should cascade forward when setting a later year on an intermediate semester', () => {
+      const planService = TestBed.inject(PlanService);
+      // Create a test plan and set up semesters
+      planService.addPlan({ id: 'custom-plan', label: 'Plan Prueba' });
+      // Select the custom plan
+      const semesters = component.displaySemesters();
+      if (semesters.length >= 4) {
+        const targetSlot = semesters[1]; // second slot
+        const targetYear = targetSlot.year + 2;
+
+        component.setSemesterYear(targetSlot.id, targetYear);
+        fixture.detectChanges();
+
+        const updatedSemesters = component.displaySemesters();
+        // The target slot must be at targetYear
+        expect(updatedSemesters[1].year).toBe(targetYear);
+        // All subsequent slots must be >= targetYear (no time travel into the past)
+        for (let i = 2; i < updatedSemesters.length; i++) {
+          expect(updatedSemesters[i].year).toBeGreaterThanOrEqual(targetYear);
+        }
+      }
     });
   });
 });

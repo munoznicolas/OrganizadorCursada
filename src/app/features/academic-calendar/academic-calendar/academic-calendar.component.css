@@ -4,8 +4,11 @@
   gap: 20px;
 }
 
-.page-header {
-  margin-bottom: 8px;
+.page-header.app-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
 }
 
 .title-row {
@@ -66,7 +69,8 @@
 }
 
 .calendar-tabs-bar {
-  margin: 12px 0 16px 0;
+  margin: 0;
+  width: 100%;
 }
 
 .calendar-tabs-scroll {
@@ -162,64 +166,137 @@
   height: 16px;
 }
 
-.plan-header-row {
+.header-title-group {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding-top: 14px;
-  border-top: 1px solid var(--color-border-tertiary);
+  flex-direction: column;
 }
 
-.plan-title-container {
-  flex: 1;
-  min-width: 240px;
-}
-
-.plan-title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.plan-title {
+.calendar-tabs-bar {
   margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+  width: 100%;
 }
 
-.read-only-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-tertiary);
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border-tertiary);
-  border-radius: var(--radius-sm);
-  padding: 3px 8px;
-}
-
-.read-only-badge mat-icon {
-  font-size: 13px;
-  width: 13px;
-  height: 13px;
-}
-
-.plan-action-buttons {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.edit-title-form {
+.calendar-tabs-scroll {
   display: flex;
   align-items: center;
   gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+}
+
+.calendar-tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.calendar-tab-chip:hover {
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-secondary);
+}
+
+.calendar-tab-chip.active {
+  background: var(--brand-primary-light);
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .calendar-tab-chip.active {
+  background: var(--brand-primary);
+  color: var(--btn-primary-text);
+  border-color: var(--brand-primary);
+}
+
+.calendar-tab-chip.editing {
+  padding: 4px 8px;
+  cursor: default;
+}
+
+.chip-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 6px;
+}
+
+.chip-action-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: inherit;
+  opacity: 0.8;
+  transition: all var(--transition-fast);
+}
+
+.chip-action-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .chip-action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.chip-action-btn.delete-chip-btn:hover {
+  color: var(--color-danger, #e53935);
+}
+
+.chip-action-btn mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.inline-tab-input {
+  border: 1px solid var(--brand-primary);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  outline: none;
+  width: 150px;
+}
+
+.chip-inline-action-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-inline-action-btn.confirm-btn {
+  color: var(--color-success, #2e7d32);
+}
+
+.chip-inline-action-btn.cancel-btn {
+  color: var(--color-text-tertiary);
+}
+
+.chip-inline-action-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 
@@ -256,13 +333,129 @@
   padding-bottom: 10px;
 }
 
+.semester-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
 .semester-title {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
-  flex: 1;
-  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.semester-dates {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  margin-left: 2px;
+}
+
+.ghost-year-btn {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  padding: 0 4px !important;
+  margin: 0 2px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--radius-xs) !important;
+  vertical-align: baseline !important;
+  transition: all var(--transition-fast) !important;
+  min-width: 0 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--color-text-primary) !important;
+}
+
+.ghost-year-btn .mdc-button__label {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  order: 1 !important;
+  gap: 2px !important;
+}
+
+.ghost-year-btn .ghost-year-number {
+  order: 1 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--color-text-primary) !important;
+  transition: color var(--transition-fast) !important;
+  line-height: 1 !important;
+}
+
+.ghost-year-btn .ghost-year-chevron,
+.ghost-year-btn mat-icon.ghost-year-chevron {
+  order: 2 !important;
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--neutral-500) !important;
+  opacity: 1 !important; /* Always visible with light grey tone */
+  transform: translateY(1px) !important;
+  transition: color var(--transition-fast) !important;
+  margin-left: 2px !important;
+  margin-right: 0 !important;
+}
+
+/* Hover and keyboard focus */
+.ghost-year-btn:hover,
+.ghost-year-btn:focus-visible {
+  background: var(--brand-primary-light) !important;
+  border-bottom: 2px solid var(--brand-primary) !important;
+}
+
+.ghost-year-btn:hover .ghost-year-number,
+.ghost-year-btn:focus-visible .ghost-year-number {
+  color: var(--brand-primary) !important;
+}
+
+.ghost-year-btn:hover .ghost-year-chevron,
+.ghost-year-btn:focus-visible .ghost-year-chevron {
+  color: var(--brand-primary) !important;
+}
+
+[data-theme="dark"] .ghost-year-btn .ghost-year-chevron {
+  color: var(--neutral-400) !important;
+}
+
+[data-theme="dark"] .ghost-year-btn:hover,
+[data-theme="dark"] .ghost-year-btn:focus-visible {
+  background: var(--brand-primary) !important;
+}
+
+[data-theme="dark"] .ghost-year-btn:hover .ghost-year-number,
+[data-theme="dark"] .ghost-year-btn:hover .ghost-year-chevron {
+  color: var(--btn-primary-text) !important;
+}
+
+.year-selection-menu .selected-year-item {
+  font-weight: 700;
+  color: var(--brand-primary);
+  background: var(--brand-primary-light);
+}
+
+.year-selection-menu .check-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--brand-primary);
+  margin-left: auto;
 }
 
 .semester-date-inputs {
@@ -334,3 +527,35 @@
 }
 
 
+
+.semester-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-semester-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  transition: all var(--transition-fast);
+}
+
+.btn-semester-export:hover {
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  background: var(--brand-primary-light);
+}
+
+.btn-semester-export mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}

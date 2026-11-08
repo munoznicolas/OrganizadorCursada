@@ -6,6 +6,7 @@
     "git status",
     "git diff",
     "npm test",
+    "npm start",
     "ng serve",
     "ng build",
     "ng test",
