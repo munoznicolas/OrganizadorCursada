@@ -27,7 +27,7 @@ export const COURSE_STATUS_CONFIG: Record<CourseStatus, CourseStatusConfig> = {
     symbol: '',
     bg: '#fffbeb',
     color: '#7c2d12',
-    borderColor: '#ffd166',
+    borderColor: '#b45309',
   },
   coursed: {
     key: 'coursed',
@@ -36,7 +36,7 @@ export const COURSE_STATUS_CONFIG: Record<CourseStatus, CourseStatusConfig> = {
     symbol: '',
     bg: '#eef2ff',
     color: '#3730a3',
-    borderColor: '#6366f1',
+    borderColor: '#4f46e5',
   },
   approved: {
     key: 'approved',
@@ -45,7 +45,7 @@ export const COURSE_STATUS_CONFIG: Record<CourseStatus, CourseStatusConfig> = {
     symbol: '',
     bg: '#e6fbf5',
     color: '#044e3a',
-    borderColor: '#06d6a0',
+    borderColor: '#047857',
   },
   'on-hold': {
     key: 'on-hold',
@@ -65,7 +65,7 @@ export const AVAILABLE_STATUS_CONFIG: CourseStatusConfig = {
   symbol: '',
   bg: '#e0f2fe',
   color: '#0369a1',
-  borderColor: '#118ab2',
+  borderColor: '#0284c7',
 };
 
 export const REQ_STATUS_CONFIG: CourseStatusConfig = {
@@ -75,7 +75,7 @@ export const REQ_STATUS_CONFIG: CourseStatusConfig = {
   symbol: '',
   bg: '#fde8ed',
   color: '#9f1239',
-  borderColor: '#ef476f',
+  borderColor: '#be123c',
 };
 
 export const UNLOCKS_STATUS_CONFIG: CourseStatusConfig = {
@@ -83,9 +83,9 @@ export const UNLOCKS_STATUS_CONFIG: CourseStatusConfig = {
   label: 'Desbloquea',
   tag: 'desbloquea',
   symbol: '',
-  bg: '#e6fbf5',
-  color: '#044e3a',
-  borderColor: '#06d6a0',
+  bg: '#ecfccb',
+  color: '#365314',
+  borderColor: '#4d7c0f',
 };
 
 export const COURSE_STATUS_LIST: CourseStatusConfig[] = [

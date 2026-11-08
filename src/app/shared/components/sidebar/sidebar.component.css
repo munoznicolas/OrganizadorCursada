@@ -5,43 +5,55 @@
   color: var(--color-text-primary);
 }
 
-a[mat-list-item].mat-mdc-list-item, button[mat-list-item].mat-mdc-list-item, a[mat-list-item], button[mat-list-item] {
+a[mat-list-item].mat-mdc-list-item,
+a[mat-list-item] {
   border-radius: var(--radius-md);
   margin: 2px 4px;
   min-height: 44px;
   color: var(--color-text-secondary);
-  transition: all var(--transition-fast);
+  --mdc-list-list-item-label-text-color: var(--color-text-secondary);
+  --mdc-list-list-item-leading-icon-color: var(--color-text-secondary);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
   background: transparent;
   border: none;
   width: calc(100% - 8px);
   text-align: left;
 }
 
-a[mat-list-item].mat-mdc-list-item:hover, button[mat-list-item].mat-mdc-list-item:hover,
-a[mat-list-item]:hover, button[mat-list-item]:hover {
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
+a[mat-list-item] [matListItemTitle],
+a[mat-list-item] [matListItemIcon] {
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
 }
 
-a.active-link.mat-mdc-list-item, a.active-link {
+@media (hover: hover) {
+  a[mat-list-item].mat-mdc-list-item:hover,
+  a[mat-list-item]:hover {
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-primary);
+  }
+
+  a[mat-list-item]:hover [matListItemTitle],
+  a[mat-list-item]:hover [matListItemIcon] {
+    color: var(--color-text-primary);
+  }
+}
+
+a.active-link.mat-mdc-list-item,
+a.active-link {
   background-color: var(--brand-primary-light);
   color: var(--brand-primary);
   font-weight: 600;
+  --mat-list-active-indicator-color: var(--brand-primary-light);
 }
 
-:host-context([data-theme="dark"]) a.active-link.mat-mdc-list-item,
-:host-context([data-theme="dark"]) a.active-link {
-  background-color: var(--brand-primary);
-  color: var(--btn-primary-text);
-}
-
-.nav-item-row {
-  display: flex;
-  align-items: center;
-}
-
-.nav-item-row a {
-  flex: 1;
+a.active-link [matListItemTitle],
+a.active-link [matListItemIcon],
+a.active-link:hover [matListItemTitle],
+a.active-link:hover [matListItemIcon] {
+  color: var(--brand-primary);
 }
 
 [matListItemTitle] {
@@ -52,3 +64,6 @@ a.active-link.mat-mdc-list-item, a.active-link {
   font-size: 13px;
 }
 
+a.active-link [matListItemTitle] {
+  font-weight: 600;
+}

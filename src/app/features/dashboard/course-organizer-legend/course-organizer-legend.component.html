@@ -1,80 +1,81 @@
-<div class="legend">
-  <div class="legend-group">
-    <mat-chip-set aria-label="Leyenda de estados de cursada" class="legend-chip-set">
-      <mat-chip
-        class="leg-chip"
-        [class.chip-disabled]="isChipDisabled('pending')"
-        [attr.aria-pressed]="!isChipDisabled('pending')"
-        (click)="onChipClick('pending')"
-        title="Clic para activar/desactivar filtro de materias Pendientes"
-      >
-        <div class="leg-dot" style="background: var(--status-pending-bg); border: 1px solid var(--status-pending-border)"></div>
-        <span>Pendiente</span>
-      </mat-chip>
-      <mat-chip
-        class="leg-chip"
-        [class.chip-disabled]="isChipDisabled('available')"
-        [attr.aria-pressed]="!isChipDisabled('available')"
-        (click)="onChipClick('available')"
-        title="Clic para activar/desactivar filtro de materias Disponibles para cursar"
-      >
-        <div class="leg-dot" style="background: var(--status-available-bg); border: 1px solid var(--status-available-border)"></div>
-        <span>Disponible para cursar</span>
-      </mat-chip>
-      <mat-chip
-        class="leg-chip"
-        [class.chip-disabled]="isChipDisabled('coursing')"
-        [attr.aria-pressed]="!isChipDisabled('coursing')"
-        (click)="onChipClick('coursing')"
-        title="Clic para activar/desactivar filtro de materias en Cursando"
-      >
-        <div class="leg-dot" style="background: var(--status-coursing-bg); border: 1px solid var(--status-coursing-border)"></div>
-        <span>Cursando</span>
-      </mat-chip>
-      <mat-chip
-        class="leg-chip"
-        [class.chip-disabled]="isChipDisabled('coursed')"
-        [attr.aria-pressed]="!isChipDisabled('coursed')"
-        (click)="onChipClick('coursed')"
-        title="Clic para activar/desactivar filtro de materias Cursadas"
-      >
-        <div class="leg-dot" style="background: var(--status-coursed-bg); border: 1px solid var(--status-coursed-border)"></div>
-        <span>Cursada</span>
-      </mat-chip>
-      <mat-chip
-        class="leg-chip"
-        [class.chip-disabled]="isChipDisabled('approved')"
-        [attr.aria-pressed]="!isChipDisabled('approved')"
-        (click)="onChipClick('approved')"
-        title="Clic para activar/desactivar filtro de materias Aprobadas"
-      >
-        <div class="leg-dot" style="background: var(--status-approved-bg); border: 1px solid var(--status-approved-border)"></div>
-        <span>Aprobada</span>
-      </mat-chip>
-    </mat-chip-set>
+<mat-card appearance="outlined" class="legend-card">
+  <div class="legend">
+    <div class="legend-group">
+      <span class="legend-group-label">
+        <mat-icon class="group-icon" aria-hidden="true">filter_list</mat-icon>
+        Filtrar estado:
+      </span>
+      <mat-chip-set aria-label="Filtros de estados de cursada" class="legend-chip-set">
+        <mat-chip
+          class="leg-chip chip-pending"
+          [class.chip-disabled]="isChipDisabled('pending')"
+          [attr.aria-pressed]="!isChipDisabled('pending')"
+          (click)="onChipClick('pending')"
+          title="Clic para activar/desactivar filtro de materias Pendientes"
+        >
+          <div class="leg-dot" aria-hidden="true"></div>
+          <span>Pendiente</span>
+        </mat-chip>
+        <mat-chip
+          class="leg-chip chip-available"
+          [class.chip-disabled]="isChipDisabled('available')"
+          [attr.aria-pressed]="!isChipDisabled('available')"
+          (click)="onChipClick('available')"
+          title="Clic para activar/desactivar filtro de materias Disponibles para cursar"
+        >
+          <div class="leg-dot" aria-hidden="true"></div>
+          <span>Disponible para cursar</span>
+        </mat-chip>
+        <mat-chip
+          class="leg-chip chip-coursing"
+          [class.chip-disabled]="isChipDisabled('coursing')"
+          [attr.aria-pressed]="!isChipDisabled('coursing')"
+          (click)="onChipClick('coursing')"
+          title="Clic para activar/desactivar filtro de materias en Cursando"
+        >
+          <div class="leg-dot" aria-hidden="true"></div>
+          <span>Cursando</span>
+        </mat-chip>
+        <mat-chip
+          class="leg-chip chip-coursed"
+          [class.chip-disabled]="isChipDisabled('coursed')"
+          [attr.aria-pressed]="!isChipDisabled('coursed')"
+          (click)="onChipClick('coursed')"
+          title="Clic para activar/desactivar filtro de materias Cursadas"
+        >
+          <div class="leg-dot" aria-hidden="true"></div>
+          <span>Cursada</span>
+        </mat-chip>
+        <mat-chip
+          class="leg-chip chip-approved"
+          [class.chip-disabled]="isChipDisabled('approved')"
+          [attr.aria-pressed]="!isChipDisabled('approved')"
+          (click)="onChipClick('approved')"
+          title="Clic para activar/desactivar filtro de materias Aprobadas"
+        >
+          <div class="leg-dot" aria-hidden="true"></div>
+          <span>Aprobada</span>
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    @if (showHoverLegend()) {
+      <div class="legend-group legend-group-hover" aria-label="Referencias al pasar el cursor">
+        <span class="legend-group-label">
+          <mat-icon class="group-icon" aria-hidden="true">ads_click</mat-icon>
+          Al pasar el cursor:
+        </span>
+        <div class="hover-badges-row">
+          <span class="legend-hover-badge badge-req">
+            <span class="leg-dot" aria-hidden="true"></span>
+            <span>Requisito</span>
+          </span>
+          <span class="legend-hover-badge badge-unlocks">
+            <span class="leg-dot" aria-hidden="true"></span>
+            <span>Desbloquea</span>
+          </span>
+        </div>
+      </div>
+    }
   </div>
-
-  <div class="legend-divider" aria-hidden="true"></div>
-
-  <div class="legend-group legend-group-hover">
-    <span class="legend-group-label">
-      <mat-icon class="hover-icon">mouse</mat-icon>
-      Al pasar el cursor:
-    </span>
-    <mat-chip-set aria-label="Leyenda de efectos hover" class="legend-chip-set">
-      <mat-chip class="leg-chip leg-chip-hover">
-        <div class="leg-dot" style="background: var(--status-req-bg); border: 1px solid var(--status-req-border)"></div>
-        <span>Requisito</span>
-      </mat-chip>
-      <mat-chip class="leg-chip leg-chip-hover">
-        <div class="leg-dot" style="background: var(--status-unlocks-bg); border: 1px solid var(--status-unlocks-border)"></div>
-        <span>Desbloquea</span>
-      </mat-chip>
-    </mat-chip-set>
-  </div>
-
-  <span class="legend-hint">
-    · Clic en materias: cambia estado &nbsp;· Clic en chips: desactiva/filtra &nbsp;· Hover: ver correlativas y materias que habilita
-  </span>
-</div>
-
+</mat-card>

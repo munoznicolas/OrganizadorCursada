@@ -1,6 +1,14 @@
+:host {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .career-selector-container {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
+  max-width: 100%;
 }
 
 button.career-chip-btn.mat-mdc-button,
@@ -9,24 +17,32 @@ button.career-chip-btn.mat-mdc-button,
   align-items: center;
   gap: 4px;
   height: 34px;
+  min-width: 0;
+  max-width: 100%;
   padding: 0 10px 0 12px;
   border-radius: 18px;
-  background-color: var(--color-background-secondary, rgba(0, 0, 0, 0.04));
+  background-color: var(--color-background-secondary);
   color: var(--color-text-primary);
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid var(--color-border-secondary, transparent);
-  transition: all var(--transition-fast, 0.15s ease);
+  border: 1px solid var(--color-border-secondary);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-button.career-chip-btn.mat-mdc-button:hover,
-.career-chip-btn:hover {
-  background-color: var(--color-surface-hover);
-  border-color: var(--brand-primary);
+@media (hover: hover) {
+  button.career-chip-btn.mat-mdc-button:hover,
+  .career-chip-btn:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--brand-primary);
+  }
 }
 
 .career-chip-text {
-  max-width: min(320px, 40vw);
+  display: block;
+  max-width: min(320px, 50vw);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -37,20 +53,18 @@ button.career-chip-btn.mat-mdc-button:hover,
   width: 20px;
   height: 20px;
   color: var(--color-text-secondary);
-}
-
-.hidden-file-input {
-  display: none;
+  flex-shrink: 0;
 }
 
 /* Dropdown Menu styling overrides */
 ::ng-deep .cdk-overlay-pane .career-selector-menu.mat-mdc-menu-panel,
 ::ng-deep .career-selector-menu {
-  min-width: 320px;
-  max-width: 480px;
+  min-width: min(320px, calc(100vw - 24px));
+  max-width: min(480px, calc(100vw - 24px));
   width: max-content;
   border-radius: 12px;
   padding: 6px 0;
+  overscroll-behavior: contain;
 }
 
 ::ng-deep .career-selector-menu .menu-header-title {
@@ -59,7 +73,7 @@ button.career-chip-btn.mat-mdc-button:hover,
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
 }
 
 ::ng-deep .career-selector-menu .career-option-details {
@@ -107,7 +121,7 @@ button.career-chip-btn.mat-mdc-button:hover,
 }
 
 ::ng-deep .career-selector-menu .active-career-item {
-  background-color: var(--color-background-secondary, rgba(59, 130, 246, 0.08));
+  background-color: var(--color-background-secondary);
 }
 
 ::ng-deep .career-selector-menu .active-career-item .career-check-icon {
@@ -126,14 +140,14 @@ button.career-chip-btn.mat-mdc-button:hover,
 }
 
 ::ng-deep .career-selector-menu .workshop-menu-item,
-::ng-deep .career-selector-menu .builder-menu-item,
-::ng-deep .career-selector-menu .import-menu-item {
+::ng-deep .career-selector-menu .builder-menu-item {
   color: var(--brand-primary);
+  --mat-menu-item-label-text-color: var(--brand-primary);
+  --mat-menu-item-icon-color: var(--brand-primary);
 }
 
 ::ng-deep .career-selector-menu .workshop-icon,
-::ng-deep .career-selector-menu .builder-icon,
-::ng-deep .career-selector-menu .import-icon {
+::ng-deep .career-selector-menu .builder-icon {
   color: var(--brand-primary);
 }
 
@@ -142,10 +156,6 @@ button.career-chip-btn.mat-mdc-button:hover,
   align-items: center;
   justify-content: space-between;
   padding-right: 8px;
-}
-
-::ng-deep .career-selector-menu .career-menu-item-btn {
-  flex: 1;
 }
 
 ::ng-deep .career-selector-menu button.career-delete-btn.mat-mdc-icon-button,
@@ -157,15 +167,20 @@ button.career-chip-btn.mat-mdc-button:hover,
   height: 32px;
   padding: 0;
   min-width: 32px;
-  opacity: 0.6;
-  transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+  opacity: 0.7;
+  transition:
+    opacity var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-::ng-deep .career-selector-menu button.career-delete-btn.mat-mdc-icon-button:hover,
-::ng-deep .career-selector-menu .career-delete-btn:hover {
-  opacity: 1;
-  color: var(--color-danger-text);
-  background-color: var(--color-danger-hover);
+@media (hover: hover) {
+  ::ng-deep .career-selector-menu button.career-delete-btn.mat-mdc-icon-button:hover,
+  ::ng-deep .career-selector-menu .career-delete-btn:hover {
+    opacity: 1;
+    color: var(--color-danger-text);
+    background-color: var(--color-danger-hover);
+  }
 }
 
 ::ng-deep .career-selector-menu .career-delete-btn .mat-icon,
@@ -180,60 +195,15 @@ button.career-chip-btn.mat-mdc-button:hover,
   margin: 0;
 }
 
-/* Confirmation Modal Overlay */
-.confirm-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--modal-backdrop-bg);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.confirm-modal-card {
-  background: var(--modal-card-bg);
-  color: var(--color-text-primary);
-  border: 1px solid var(--modal-border);
-  border-radius: var(--radius-md, 16px);
-  padding: 24px;
-  max-width: 440px;
-  width: calc(100vw - 32px);
-  box-sizing: border-box;
-  box-shadow: var(--shadow-lg);
-  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.confirm-modal-header {
+/* Confirmation Dialog Styles */
+.confirm-dialog-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-}
-
-.confirm-modal-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  color: var(--color-text-primary);
 }
 
 .warn-icon {
@@ -244,29 +214,14 @@ button.career-chip-btn.mat-mdc-button:hover,
   flex-shrink: 0;
 }
 
-.confirm-modal-body p {
+.confirm-dialog-body p {
   margin: 0 0 8px 0;
   font-size: 14px;
   line-height: 1.5;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  white-space: normal;
-}
-
-.confirm-modal-body strong {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  white-space: normal;
+  color: var(--color-text-primary);
 }
 
 .warn-text {
   color: var(--color-text-secondary);
   font-size: 13px;
-}
-
-.confirm-modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
 }

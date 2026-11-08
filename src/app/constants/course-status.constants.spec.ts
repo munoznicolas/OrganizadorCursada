@@ -22,15 +22,15 @@ describe('CourseStatusConstants', () => {
   it('should export correct auxiliary chip configs for available, req, and unlocks', () => {
     expect(AVAILABLE_STATUS_CONFIG.label).toBe('Disponible para cursar');
     expect(AVAILABLE_STATUS_CONFIG.bg).toBe('#e0f2fe');
-    expect(AVAILABLE_STATUS_CONFIG.borderColor).toBe('#118ab2');
+    expect(AVAILABLE_STATUS_CONFIG.borderColor).toBe('#0284c7');
 
     expect(REQ_STATUS_CONFIG.label).toBe('Requisito');
     expect(REQ_STATUS_CONFIG.bg).toBe('#fde8ed');
-    expect(REQ_STATUS_CONFIG.borderColor).toBe('#ef476f');
+    expect(REQ_STATUS_CONFIG.borderColor).toBe('#be123c');
 
     expect(UNLOCKS_STATUS_CONFIG.label).toBe('Desbloquea');
-    expect(UNLOCKS_STATUS_CONFIG.bg).toBe('#e6fbf5');
-    expect(UNLOCKS_STATUS_CONFIG.borderColor).toBe('#06d6a0');
+    expect(UNLOCKS_STATUS_CONFIG.bg).toBe('#ecfccb');
+    expect(UNLOCKS_STATUS_CONFIG.borderColor).toBe('#4d7c0f');
   });
 
   it('should return correct config, label, and tag for given status', () => {

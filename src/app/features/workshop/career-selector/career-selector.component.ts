@@ -5,6 +5,7 @@ import {
   computed,
   signal,
   output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CareerService } from '../../../services/career.service';
 import { ToastService } from '../../../services/toast.service';
 import { CareerIndexEntry } from '../../../models/career.model';
@@ -28,6 +30,7 @@ import { CareerIndexEntry } from '../../../models/career.model';
     MatMenuModule,
     MatDividerModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   templateUrl: './career-selector.component.html',
   styleUrl: './career-selector.component.css',
@@ -35,10 +38,13 @@ import { CareerIndexEntry } from '../../../models/career.model';
 })
 export class CareerSelectorComponent {
   @ViewChild(MatMenuTrigger) menuTrigger?: MatMenuTrigger;
+  @ViewChild('deleteConfirmDialog') deleteDialogTemplate?: TemplateRef<unknown>;
 
   readonly careerService = inject(CareerService);
   private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
+  private deleteDialogRef?: MatDialogRef<unknown>;
 
   openWorkshop = output<void>();
 
@@ -48,7 +54,7 @@ export class CareerSelectorComponent {
     const active = this.careerService.activeCareer();
     const selectedId = this.careerService.selectedCareerId();
     if (!active || !selectedId || active.id === 'empty-plan') {
-      return 'Sin Plan Seleccionado';
+      return 'Sin plan seleccionado';
     }
     const isCustom = selectedId.startsWith('custom-');
     return isCustom ? `${active.name} (Copia local)` : active.name;
@@ -62,9 +68,21 @@ export class CareerSelectorComponent {
     event.stopPropagation();
     this.menuTrigger?.closeMenu();
     this.careerToDelete.set(career);
+    if (this.deleteDialogTemplate) {
+      this.deleteDialogRef = this.dialog.open(this.deleteDialogTemplate, {
+        width: '440px',
+        maxWidth: 'calc(100vw - 32px)',
+        autoFocus: 'first-tabbable',
+        restoreFocus: true,
+      });
+      this.deleteDialogRef.afterClosed().subscribe(() => {
+        this.careerToDelete.set(null);
+      });
+    }
   }
 
   cancelDelete(): void {
+    this.deleteDialogRef?.close();
     this.careerToDelete.set(null);
   }
 
@@ -73,6 +91,7 @@ export class CareerSelectorComponent {
     if (!target) return;
     this.careerService.removeCareer(target.id);
     this.toastService.info(`Carrera "${target.name}" desuscrita correctamente.`);
+    this.deleteDialogRef?.close();
     this.careerToDelete.set(null);
   }
 

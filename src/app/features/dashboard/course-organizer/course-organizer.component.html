@@ -3,7 +3,6 @@
     <app-no-plan-selected
       title="Plan de Cursada no disponible"
       description="Seleccioná un plan de estudio del catálogo o cargá un plan de demostración para organizar tus materias, registrar tu avance académico y consultar correlatividades."
-      icon="school"
     />
   } @else {
     <div class="header app-page-header">
@@ -34,28 +33,6 @@
       (mouseLeft)="onMouseLeft()"
     />
 
-    <mat-card appearance="outlined" class="info-bar-card">
-      <mat-card-content class="info-bar-content">
-        <mat-icon class="info-icon">info</mat-icon>
-        @if (hoveredCourseInfo(); as info) {
-          <span>
-            <strong>{{ info.name }}</strong>
-            @if (info.requirements.length) {
-              &nbsp;·&nbsp; <span class="info-req">Requiere: {{ info.requirements.join(', ') }}</span>
-            }
-            @if (info.unlocks.length) {
-              &nbsp;·&nbsp; <span class="info-unlocks">Habilita: {{ info.unlocks.join(', ') }}</span>
-            }
-            @if (!info.requirements.length && !info.unlocks.length) {
-              &nbsp;·&nbsp; Sin correlativas
-            }
-          </span>
-        } @else {
-          <span>Seleccioná o pasá el cursor sobre una materia para ver qué requiere y qué habilita.</span>
-        }
-      </mat-card-content>
-    </mat-card>
-
     <app-lesson-selector-modal
       [course]="selectedCourseForModal()"
       [isOpen]="isModalOpen()"
@@ -64,5 +41,3 @@
     />
   }
 </div>
-
-

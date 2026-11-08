@@ -24,13 +24,24 @@ export class ThemeService {
 
     effect(() => {
       const isDark = this.isDarkMode();
-      if (typeof document !== 'undefined') {
+      if (typeof document !== 'undefined' && document.body) {
+        document.body.classList.add('theme-switching');
         if (isDark) {
+          document.documentElement.setAttribute('data-theme', 'dark');
           document.body.setAttribute('data-theme', 'dark');
           document.documentElement.style.setProperty('color-scheme', 'dark');
         } else {
+          document.documentElement.removeAttribute('data-theme');
           document.body.removeAttribute('data-theme');
           document.documentElement.style.setProperty('color-scheme', 'light');
+        }
+        void document.body.offsetHeight;
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => {
+            document.body?.classList.remove('theme-switching');
+          });
+        } else {
+          document.body.classList.remove('theme-switching');
         }
       }
     });
@@ -94,4 +105,3 @@ export class ThemeService {
     this.setMode(nextMode);
   }
 }
-

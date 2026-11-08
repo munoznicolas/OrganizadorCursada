@@ -1,6 +1,7 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  DestroyRef,
   inject,
   signal,
   computed,
@@ -8,6 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
 import { CareerSelectorComponent } from './features/workshop/career-selector/career-selector.component';
@@ -53,7 +56,10 @@ export class App implements OnInit {
   private readonly courseService = inject(CourseService);
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
 
+  isMobile = signal(false);
   isOpen = signal(true);
   private internalWorkshopSignal = signal(false);
   showWorkshop = computed(() => this.internalWorkshopSignal() || this.planService.isWorkshopOpen());
@@ -63,6 +69,16 @@ export class App implements OnInit {
   plans = this.planService.plans;
 
   currentPlanToPublish = signal<unknown>(null);
+
+  constructor() {
+    this.breakpointObserver
+      .observe('(max-width: 768px)')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => {
+        this.isMobile.set(state.matches);
+        this.isOpen.set(!state.matches);
+      });
+  }
 
   ngOnInit(): void {
     // URL Hash Fragment Listener for 1-Click P2P Link Import (#import=...)
@@ -83,6 +99,12 @@ export class App implements OnInit {
       } catch {
         this.toast.show('Error al importar el plan desde el enlace.', 'error');
       }
+    }
+  }
+
+  onSidebarNavigate(): void {
+    if (this.isMobile()) {
+      this.isOpen.set(false);
     }
   }
 

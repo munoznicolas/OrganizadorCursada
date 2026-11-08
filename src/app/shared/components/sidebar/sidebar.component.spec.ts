@@ -9,7 +9,7 @@ describe('SidebarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SidebarComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([{ path: 'home', component: SidebarComponent }])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
@@ -21,18 +21,26 @@ describe('SidebarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render items including Plan de cursada as a single route item', () => {
+  it('should render 5 standardized Spanish navigation items including Plan de cursada and Plan Hub', () => {
     const items = component.items();
     expect(items).toHaveLength(5);
+    expect(items.map((i) => i.label)).toEqual([
+      'Inicio',
+      'Mi semana',
+      'Plan de cursada',
+      'Plan Hub',
+      'Publicar plan',
+    ]);
     const academicItem = items.find((i) => i.label === 'Plan de cursada');
     expect(academicItem).toBeDefined();
     expect(academicItem?.route).toBe('/academicCalendar');
     expect(academicItem?.icon).toBe('date_range');
   });
 
-  it('should handle action items when emitted', () => {
-    const workshopSpy = vi.spyOn(component.openWorkshop, 'emit');
-    component.handleAction({ label: 'Workshop', action: 'open_workshop' });
-    expect(workshopSpy).toHaveBeenCalled();
+  it('should emit navigate when a navigation link is clicked', () => {
+    const navigateSpy = vi.spyOn(component.navigate, 'emit');
+    const firstLink = fixture.nativeElement.querySelector('a[mat-list-item]') as HTMLAnchorElement;
+    firstLink.click();
+    expect(navigateSpy).toHaveBeenCalled();
   });
 });

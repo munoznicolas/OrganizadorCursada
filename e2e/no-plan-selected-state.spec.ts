@@ -21,6 +21,15 @@ test.describe('Validation of "No Plan Selected" State on /home and /myWeek', () 
     await expect(page.getByRole('button', { name: /Cargar Demo/i })).toBeVisible();
   });
 
+  test('should navigate to /workshop when clicking "Explorar Planes" button', async ({ page }) => {
+    await page.goto('/home');
+    const exploreButton = page.locator('app-no-plan-selected').getByRole('button', { name: /Explorar Planes/i });
+    await exploreButton.click();
+
+    await expect(page).toHaveURL(/\/workshop/);
+    await expect(page.locator('.app-page-header .page-title')).toContainText('Plan Hub Comunitario');
+  });
+
   test('should display app-no-plan-selected component on /myWeek when no plan is selected', async ({ page }) => {
     await page.goto('/myWeek');
     const noPlanComponent = page.locator('app-no-plan-selected');

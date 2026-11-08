@@ -1,16 +1,23 @@
 :host {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
+}
+
+.user-menu-root {
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Angular Material Menu Overrides for Google Account Card */
 ::ng-deep .cdk-overlay-pane .google-account-menu-panel.mat-mdc-menu-panel {
   max-width: none;
-  min-width: 340px;
+  min-width: min(340px, calc(100vw - 24px));
   border-radius: 28px;
   background: transparent;
-  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.18));
+  box-shadow: var(--shadow-lg);
   overflow: visible;
+  overscroll-behavior: contain;
 }
 
 ::ng-deep .google-account-menu-panel .mat-mdc-menu-content {
@@ -18,31 +25,12 @@
   background: transparent;
 }
 
-/* Unauthenticated Google Sign in Button */
 .btn-content {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
   line-height: 1;
-}
-
-.google-login-btn {
-  height: 36px;
-  border-radius: 18px;
-  font-weight: 500;
-  border-color: var(--color-border-tertiary);
-  padding: 0 16px;
-  background-color: var(--color-background-primary);
-  color: var(--color-text-primary);
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.google-login-btn:hover {
-  background-color: var(--color-background-secondary);
-  box-shadow: var(--shadow-sm);
 }
 
 .google-icon {
@@ -66,13 +54,15 @@
 .guest-avatar-btn {
   color: var(--color-text-secondary);
   transition:
-    color 0.15s ease,
-    background-color 0.15s ease;
+    color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-.guest-avatar-btn:hover {
-  color: var(--brand-primary);
-  background-color: var(--color-background-secondary);
+@media (hover: hover) {
+  .guest-avatar-btn:hover {
+    color: var(--brand-primary);
+    background-color: var(--color-background-secondary);
+  }
 }
 
 .guest-account-icon {
@@ -92,7 +82,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--brand-primary);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   font-weight: 600;
   font-size: 15px;
@@ -112,20 +102,9 @@
   border: 1px solid var(--color-border-tertiary);
   border-radius: 28px;
   box-sizing: border-box;
-  font-family:
-    Google Sans,
-    Roboto,
-    Arial,
-    sans-serif;
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-/* Dark mode overrides */
-[data-theme='dark'] .google-card-container {
-  background-color: var(--color-background-primary);
-  color: var(--color-text-primary);
 }
 
 /* Top bar: email + close button */
@@ -146,10 +125,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-[data-theme='dark'] .google-user-email {
-  color: var(--color-text-secondary);
 }
 
 .google-close-btn {
@@ -196,7 +171,7 @@ a.google-login-menu-btn.mat-mdc-button,
   justify-content: center;
   height: 40px;
   border-radius: 20px;
-  background-color: var(--brand-primary);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   padding: 0 20px;
   font-weight: 500;
@@ -250,37 +225,13 @@ a.google-login-menu-btn.mat-mdc-button,
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: var(--brand-primary);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   font-size: 36px;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-}
-
-.google-avatar-camera-badge {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background-color: var(--color-background-primary);
-  color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  border: 2px solid var(--color-background-secondary);
-}
-
-.camera-icon {
-  font-size: 15px;
-  width: 15px;
-  height: 15px;
 }
 
 .google-greeting {
@@ -289,10 +240,6 @@ a.google-login-menu-btn.mat-mdc-button,
   font-weight: 400;
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
-}
-
-[data-theme='dark'] .google-greeting {
-  color: var(--color-text-primary);
 }
 
 .google-manage-btn {
@@ -304,16 +251,13 @@ a.google-login-menu-btn.mat-mdc-button,
   padding: 0 20px;
   height: 38px;
   background: transparent;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transition-fast);
 }
 
-[data-theme='dark'] .google-manage-btn {
-  color: var(--brand-primary);
-  border-color: var(--color-border-secondary);
-}
-
-.google-manage-btn:hover {
-  background-color: var(--color-surface-hover);
+@media (hover: hover) {
+  .google-manage-btn:hover {
+    background-color: var(--color-surface-hover);
+  }
 }
 
 /* Sync Status Badge Box */
@@ -325,10 +269,6 @@ a.google-login-menu-btn.mat-mdc-button,
   background-color: var(--color-background-secondary);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
-}
-
-[data-theme='dark'] .google-sync-card {
-  background-color: var(--color-background-secondary);
 }
 
 .sync-badge-icon {
@@ -352,16 +292,8 @@ a.google-login-menu-btn.mat-mdc-button,
   color: var(--color-text-primary);
 }
 
-[data-theme='dark'] .sync-title {
-  color: var(--color-text-primary);
-}
-
 .sync-subtitle {
   font-size: 0.75rem;
-  color: var(--color-text-secondary);
-}
-
-[data-theme='dark'] .sync-subtitle {
   color: var(--color-text-secondary);
 }
 
@@ -402,18 +334,16 @@ a.google-login-menu-btn.mat-mdc-button,
   display: flex;
   background-color: var(--color-background-primary);
   border-radius: 12px;
-  padding: 3px;
+  padding: 4px;
   gap: 2px;
-  border: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--color-border-tertiary);
 }
 
-[data-theme='dark'] .theme-selector-group {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
+button.theme-option-btn.mat-mdc-button,
 .theme-option-btn {
   flex: 1;
-  display: flex;
+  min-width: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
@@ -426,33 +356,36 @@ a.google-login-menu-btn.mat-mdc-button,
   font-size: 0.725rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .theme-option-btn mat-icon {
   font-size: 15px;
   width: 15px;
   height: 15px;
+  margin: 0;
 }
 
-.theme-option-btn:hover {
-  color: var(--color-text-primary);
-  background-color: var(--color-hover-bg, rgba(0, 0, 0, 0.04));
+@media (hover: hover) {
+  button.theme-option-btn.mat-mdc-button:hover,
+  .theme-option-btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-hover);
+  }
 }
 
+button.theme-option-btn.mat-mdc-button.active,
 .theme-option-btn.active {
-  background-color: var(--brand-primary);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
 }
 
-[data-theme='dark'] .theme-option-btn.active {
-  background-color: var(--brand-primary);
-  color: var(--btn-primary-text);
-}
-
-/* Legacy Theme Switcher Row (used for reset session) */
+/* Reset Session Row */
 .user-menu-theme-row {
   display: flex;
   align-items: center;
@@ -462,10 +395,6 @@ a.google-login-menu-btn.mat-mdc-button,
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   gap: 8px;
-}
-
-[data-theme='dark'] .user-menu-theme-row {
-  background-color: var(--color-background-secondary);
 }
 
 .theme-row-info {
@@ -493,10 +422,6 @@ a.google-login-menu-btn.mat-mdc-button,
   font-weight: 500;
   color: var(--color-text-primary);
   white-space: nowrap;
-}
-
-[data-theme='dark'] .theme-row-label {
-  color: var(--color-text-primary);
 }
 
 button.theme-toggle-menu-btn.mat-mdc-button,
@@ -533,13 +458,10 @@ button.theme-toggle-menu-btn.mat-mdc-button,
   background-color: var(--color-background-secondary);
 }
 
-[data-theme='dark'] .google-signout-btn {
-  background-color: var(--color-background-secondary);
-  color: var(--color-danger-text);
-}
-
-.google-signout-btn:hover {
-  background-color: var(--color-danger-hover);
+@media (hover: hover) {
+  .google-signout-btn:hover {
+    background-color: var(--color-danger-hover);
+  }
 }
 
 .signout-icon {
@@ -548,8 +470,10 @@ button.theme-toggle-menu-btn.mat-mdc-button,
   height: 18px;
 }
 
-.spin-icon {
-  animation: spin 1.5s linear infinite;
+@media (prefers-reduced-motion: no-preference) {
+  .spin-icon {
+    animation: spin 1.5s linear infinite;
+  }
 }
 
 @keyframes spin {

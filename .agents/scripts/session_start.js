@@ -24,9 +24,11 @@ process.stdin.on('end', async () => {
       return;
     }
 
-    // Port is closed, start dev server in background
+    // Port is closed, start dev server in background using node + ng.js directly
+    // (Spawning npm.cmd without shell:true throws EINVAL on Node 20.12+/22+/26+ on Windows)
     const rootDir = path.resolve(__dirname, '..', '..');
-    const child = spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['start'], {
+    const ngBin = path.join(rootDir, 'node_modules', '@angular', 'cli', 'bin', 'ng.js');
+    const child = spawn(process.execPath, [ngBin, 'serve'], {
       cwd: rootDir,
       detached: true,
       stdio: 'ignore',

@@ -3,7 +3,6 @@
     <app-no-plan-selected
       title="Calendario Académico no disponible"
       description="Seleccioná o cargá un plan de estudio para visualizar y personalizar tu calendario académico por semestres."
-      icon="date_range"
     />
   } @else {
     <div class="page-header app-page-header">
@@ -117,6 +116,8 @@
     </div>
     </div>
 
+    <app-calendar-legend />
+
     @for (item of displaySemesters(); track item.id; let i = $index; let last = $last) {
       <section class="semester-section">
         <div class="semester-header" [class.first-semester-header]="i === 0">
@@ -204,6 +205,7 @@
         <app-calendar
           [coursesOverride]="item.courses"
           [showHeader]="false"
+          [showLegend]="false"
           [isEditable]="isEditable()"
           [clickTogglesStatus]="false"
           (lessonMoveRequested)="onLessonMoveRequested($event, i)"

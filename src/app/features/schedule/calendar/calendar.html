@@ -3,7 +3,6 @@
     <app-no-plan-selected
       title="Plan de estudio no disponible"
       description="Seleccioná o importá un plan de estudio para visualizar la grilla semanal de tus comisiones y materias en curso."
-      icon="calendar_view_week"
     />
   } @else {
     @if (showHeader()) {
@@ -17,6 +16,7 @@
           <mat-button-toggle-group
             [value]="viewMode()"
             (change)="setViewMode($event.value)"
+            [hideSingleSelectionIndicator]="true"
             aria-label="Modo de vista del calendario"
             class="mat-view-toggle"
           >
@@ -60,14 +60,11 @@
     @if (showExportModal()) {
       <app-export-calendar-modal (closed)="closeExportModal()" />
     }
-    @if (!isReadOnly()) {
+    @if (!isReadOnly() && showLegend()) {
       <app-calendar-legend></app-calendar-legend>
     }
     @if (hasNoCoursingLessons()) {
       <div class="calendar-empty-state glass-panel">
-        <div class="empty-icon-wrapper">
-          <mat-icon>schedule</mat-icon>
-        </div>
         <h2 class="empty-title">Esperando materias en estado "Cursando"</h2>
         <p class="empty-description">
           Aún no tenés materias asignadas al estado <strong>Cursando</strong> en este plan.

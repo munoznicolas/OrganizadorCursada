@@ -5,8 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 export interface SidebarItem {
   label: string;
-  route?: string;
-  action?: string;
+  route: string;
   icon?: string;
 }
 
@@ -19,22 +18,13 @@ export interface SidebarItem {
   imports: [RouterModule, MatListModule, MatIconModule],
 })
 export class SidebarComponent {
-  openWorkshop = output<void>();
-  openPublisher = output<void>();
+  navigate = output<void>();
 
   items = computed<SidebarItem[]>(() => [
-    { label: 'Home', route: '/home', icon: 'home' },
-    { label: 'Mi Semana', route: '/myWeek', icon: 'calendar_view_week' },
+    { label: 'Inicio', route: '/home', icon: 'home' },
+    { label: 'Mi semana', route: '/myWeek', icon: 'calendar_view_week' },
     { label: 'Plan de cursada', route: '/academicCalendar', icon: 'date_range' },
-    { label: 'Workshop', route: '/workshop', icon: 'store' },
-    { label: 'Publicar Plan', route: '/publish', icon: 'publish' },
+    { label: 'Plan Hub', route: '/workshop', icon: 'storefront' },
+    { label: 'Publicar plan', route: '/publish', icon: 'publish' },
   ]);
-
-  handleAction(item: SidebarItem): void {
-    if (item.action === 'open_workshop') {
-      this.openWorkshop.emit();
-    } else if (item.action === 'open_publisher') {
-      this.openPublisher.emit();
-    }
-  }
 }

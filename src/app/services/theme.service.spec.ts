@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ThemeService, ThemeMode } from './theme.service';
+import { ThemeService } from './theme.service';
 
 describe('ThemeService', () => {
   let service: ThemeService;
@@ -42,5 +42,16 @@ describe('ThemeService', () => {
     service.toggleDarkMode();
     expect(service.mode()).toBe('system');
   });
-});
 
+  it('should update document.body and document.documentElement data-theme attribute when switching modes', () => {
+    service.setMode('dark');
+    TestBed.flushEffects();
+    expect(document.body.getAttribute('data-theme')).toBe('dark');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+
+    service.setMode('light');
+    TestBed.flushEffects();
+    expect(document.body.getAttribute('data-theme')).toBeNull();
+    expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+  });
+});

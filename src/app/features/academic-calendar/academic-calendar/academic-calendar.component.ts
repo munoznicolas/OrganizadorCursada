@@ -22,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { Course } from '../../../models/course';
 import { Calendar } from '../../schedule/calendar/calendar';
+import { CalendarLegendComponent } from '../../schedule/calendar-legend/calendar-legend.component';
 import { ExportCalendarModalComponent } from '../../schedule/export-calendar-modal/export-calendar-modal.component';
 
 import { NoPlanSelectedComponent } from '../../../shared/components/no-plan-selected/no-plan-selected.component';
@@ -47,6 +48,7 @@ interface DisplaySemester {
   standalone: true,
   imports: [
     Calendar,
+    CalendarLegendComponent,
     CommonModule,
     MatIconModule,
     MatButtonModule,

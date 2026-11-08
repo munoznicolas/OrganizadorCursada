@@ -1,4 +1,5 @@
-import { Injectable, inject, signal, WritableSignal, Injector } from '@angular/core';
+import { Injectable, inject, signal, WritableSignal } from '@angular/core';
+import { Router } from '@angular/router';
 import { CourseService } from './course.service';
 import { CareerService } from './career.service';
 import {
@@ -55,6 +56,14 @@ export class PlanService {
     }
   })();
 
+  private readonly router = (() => {
+    try {
+      return inject(Router, { optional: true });
+    } catch {
+      return null;
+    }
+  })();
+
   private getCareerService(): CareerService | null {
     return this.careerService;
   }
@@ -68,6 +77,7 @@ export class PlanService {
 
   openWorkshop(): void {
     this.isWorkshopOpenSignal.set(true);
+    void this.router?.navigate(['/workshop']);
   }
 
   closeWorkshop(): void {
@@ -353,4 +363,3 @@ export class PlanService {
     }
   }
 }
-

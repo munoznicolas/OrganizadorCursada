@@ -1,9 +1,18 @@
+.legend-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 0;
 }
 
 .legend-group {
@@ -11,13 +20,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-}
-
-.legend-divider {
-  width: 1px;
-  height: 22px;
-  background: var(--color-border-tertiary);
-  margin: 0 4px;
 }
 
 .legend-group-label {
@@ -29,13 +31,14 @@
   color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  margin-right: 4px;
 }
 
-.legend-group-label .hover-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-  color: var(--color-text-tertiary);
+.legend-group-label .group-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: var(--color-text-secondary);
 }
 
 .legend-chip-set {
@@ -46,15 +49,60 @@
 }
 
 .leg-chip {
-  font-size: 0.825rem;
-  font-weight: 500;
+  --chip-bg: var(--status-pending-bg);
+  --chip-color: var(--status-pending-color);
+  --chip-border: var(--status-pending-border);
+  --mat-chip-elevated-container-color: var(--chip-bg);
+  --mat-chip-label-text-color: var(--chip-color);
+  --mat-chip-outline-color: var(--chip-border);
+  --mdc-chip-elevated-container-color: var(--chip-bg);
+  --mdc-chip-label-text-color: var(--chip-color);
+  --mdc-chip-outline-color: var(--chip-border);
+  background-color: var(--chip-bg) !important;
+  color: var(--chip-color) !important;
+  border: 1px solid var(--chip-border) !important;
+  border-radius: var(--radius-full) !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s ease, filter 0.2s ease, transform 0.15s ease;
   user-select: none;
 }
 
-.leg-chip:hover {
-  transform: translateY(-1px);
+.leg-chip.chip-pending {
+  --chip-bg: var(--status-pending-bg);
+  --chip-color: var(--status-pending-color);
+  --chip-border: var(--status-pending-border);
+}
+
+.leg-chip.chip-available {
+  --chip-bg: var(--status-available-bg);
+  --chip-color: var(--status-available-color);
+  --chip-border: var(--status-available-border);
+}
+
+.leg-chip.chip-coursing {
+  --chip-bg: var(--status-coursing-bg);
+  --chip-color: var(--status-coursing-color);
+  --chip-border: var(--status-coursing-border);
+}
+
+.leg-chip.chip-coursed {
+  --chip-bg: var(--status-coursed-bg);
+  --chip-color: var(--status-coursed-color);
+  --chip-border: var(--status-coursed-border);
+}
+
+.leg-chip.chip-approved {
+  --chip-bg: var(--status-approved-bg);
+  --chip-color: var(--status-approved-color);
+  --chip-border: var(--status-approved-border);
+}
+
+@media (hover: hover) {
+  .leg-chip:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .leg-chip.chip-disabled {
@@ -63,33 +111,61 @@
   text-decoration: line-through;
 }
 
-.leg-chip.leg-chip-hover {
-  cursor: default;
-}
-
-.leg-chip.leg-chip-hover:hover {
-  transform: none;
+.leg-chip ::ng-deep .mdc-evolution-chip__action--primary::before {
+  border: none !important;
 }
 
 .leg-chip ::ng-deep .mat-mdc-chip-action-label {
   display: inline-flex;
   align-items: center;
+  color: var(--chip-color) !important;
+  font-weight: 600;
 }
 
+/* Non-interactive hover reference badges (distinct rectangular dashed shape) */
+.hover-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-hover-badge {
+  --chip-bg: var(--status-req-bg);
+  --chip-color: var(--status-req-color);
+  --chip-border: var(--status-req-border);
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: var(--radius-sm, 6px);
+  background-color: var(--chip-bg);
+  color: var(--chip-color);
+  border: 1.5px dashed var(--chip-border);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  user-select: none;
+  cursor: default;
+}
+
+.legend-hover-badge.badge-req {
+  --chip-bg: var(--status-req-bg);
+  --chip-color: var(--status-req-color);
+  --chip-border: var(--status-req-border);
+}
+
+.legend-hover-badge.badge-unlocks {
+  --chip-bg: var(--status-unlocks-bg);
+  --chip-color: var(--status-unlocks-color);
+  --chip-border: var(--status-unlocks-border);
+}
 
 .leg-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+  background-color: var(--chip-border);
   flex-shrink: 0;
   display: inline-block;
   margin-right: 8px;
-}
-
-.legend-hint {
-  width: 100%;
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
-  font-style: italic;
-  margin-top: 2px;
 }

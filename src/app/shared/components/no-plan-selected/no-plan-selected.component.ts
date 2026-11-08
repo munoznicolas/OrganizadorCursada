@@ -5,6 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +23,7 @@ import { ToastService } from '../../../services/toast.service';
 export class NoPlanSelectedComponent {
   private readonly planService = inject(PlanService);
   private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router, { optional: true });
 
   title = input<string>('Sin Plan Seleccionado');
   description = input<string>(
@@ -31,6 +33,7 @@ export class NoPlanSelectedComponent {
 
   onOpenPlanHub(): void {
     this.planService.openWorkshop();
+    void this.router?.navigate(['/workshop']);
   }
 
   onLoadDemoPlan(): void {

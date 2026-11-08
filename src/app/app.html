@@ -1,24 +1,26 @@
-<mat-sidenav-container class="app-container">
-  <mat-sidenav mode="side" [opened]="isOpen()" role="navigation">
-    <app-sidebar (openWorkshop)="openWorkshop()" (openPublisher)="openPublisher()" />
+<mat-toolbar class="main-toolbar">
+  <button
+    mat-icon-button
+    (click)="isOpen.update(v => !v)"
+    aria-label="Alternar menú de navegación"
+    [attr.aria-expanded]="isOpen()"
+  >
+    <mat-icon aria-hidden="true">menu</mat-icon>
+  </button>
+  <span class="app-brand-title">OrganizadorCursada</span>
+  <span class="breadcrumb-separator" aria-hidden="true">/</span>
+  <app-career-selector (openWorkshop)="openWorkshop()" />
+
+  <span class="toolbar-spacer"></span>
+
+  <app-user-menu />
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container" (backdropClick)="isOpen.set(false)">
+  <mat-sidenav [mode]="isMobile() ? 'over' : 'side'" [opened]="isOpen()">
+    <app-sidebar (navigate)="onSidebarNavigate()" />
   </mat-sidenav>
   <mat-sidenav-content role="main">
-    <mat-toolbar class="main-toolbar">
-      <button
-        mat-icon-button
-        (click)="isOpen.update(v => !v)"
-        aria-label="Alternar menú de navegación"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span class="app-brand-title">OrganizadorCursada</span>
-      <span class="breadcrumb-separator">/</span>
-      <app-career-selector (openWorkshop)="openWorkshop()" />
-
-      <span class="toolbar-spacer"></span>
-
-      <app-user-menu />
-    </mat-toolbar>
     <div class="wrap">
       <router-outlet />
     </div>

@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { PlanService, SemesterSlot } from './plan.service';
 import { SecureStorageService } from './security/secure-storage.service';
 
@@ -50,6 +51,16 @@ describe('PlanService', () => {
     service.addPlan({ id: '1', label: 'Plan Inicial' });
     service.updatePlanLabel('1', 'Plan Modificado');
     expect(service.getPlanLabel('1')).toBe('Plan Modificado');
+  });
+
+  it('should set isWorkshopOpen and navigate to /workshop when openWorkshop is called', () => {
+    const router = TestBed.inject(Router);
+    const navSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    service.openWorkshop();
+
+    expect(service.isWorkshopOpen()).toBe(true);
+    expect(navSpy).toHaveBeenCalledWith(['/workshop']);
   });
 
   it('should update and retrieve semester list reactively via Signals', () => {

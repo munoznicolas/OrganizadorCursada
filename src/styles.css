@@ -90,28 +90,28 @@
 
   --status-available-bg: #e0f2fe;
   --status-available-color: #0369a1;
-  --status-available-border: #118ab2;
+  --status-available-border: #0284c7;
 
   --status-coursing-bg: #fffbeb;
   --status-coursing-color: #7c2d12;
-  --status-coursing-border: #ffd166;
+  --status-coursing-border: #b45309;
 
   --status-coursed-bg: #eef2ff;
   --status-coursed-color: #3730a3;
-  --status-coursed-border: #6366f1;
+  --status-coursed-border: #4f46e5;
 
   --status-approved-bg: #e6fbf5;
   --status-approved-color: #044e3a;
-  --status-approved-border: #06d6a0;
+  --status-approved-border: #047857;
 
   /* Hover Highlights */
   --status-req-bg: #fde8ed;
   --status-req-color: #9f1239;
-  --status-req-border: #ef476f;
+  --status-req-border: #be123c;
 
-  --status-unlocks-bg: #e6fbf5;
-  --status-unlocks-color: #044e3a;
-  --status-unlocks-border: #06d6a0;
+  --status-unlocks-bg: #ecfccb;
+  --status-unlocks-color: #365314;
+  --status-unlocks-border: #4d7c0f;
 
   /* Transitions */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -120,6 +120,10 @@
 
 /* Dark Mode Theme Support */
 [data-theme='dark'] {
+  --brand-primary: #38bdf8;
+  --brand-primary-hover: #0284c7;
+  --brand-primary-light: #082f49;
+
   --color-text-primary: #f3f4f6;
   --color-text-secondary: #9ca3af;
   --color-text-tertiary: #6b7280;
@@ -168,32 +172,32 @@
 
   --status-pending-bg: #0f172a;
   --status-pending-color: #cbd5e1;
-  --status-pending-border: #073b4c;
+  --status-pending-border: #94a3b8;
 
   --status-available-bg: #0c4a6e;
   --status-available-color: #bae6fd;
-  --status-available-border: #118ab2;
+  --status-available-border: #38bdf8;
 
   --status-coursing-bg: #451a03;
   --status-coursing-color: #fef08a;
-  --status-coursing-border: #ffd166;
+  --status-coursing-border: #fbbf24;
 
   --status-coursed-bg: #1e1b4b;
   --status-coursed-color: #c7d2fe;
-  --status-coursed-border: #6366f1;
+  --status-coursed-border: #818cf8;
 
   --status-approved-bg: #064e3b;
   --status-approved-color: #a7f3d0;
-  --status-approved-border: #06d6a0;
+  --status-approved-border: #34d399;
 
   /* Hover Highlights */
   --status-req-bg: #881337;
   --status-req-color: #fecdd3;
-  --status-req-border: #ef476f;
+  --status-req-border: #fb7185;
 
-  --status-unlocks-bg: #064e3b;
-  --status-unlocks-color: #a7f3d0;
-  --status-unlocks-border: #06d6a0;
+  --status-unlocks-bg: #1a2e05;
+  --status-unlocks-color: #d9f99d;
+  --status-unlocks-border: #84cc16;
 }
 
 .info-req {
@@ -209,6 +213,13 @@
 :focus-visible {
   outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
+}
+
+body.theme-switching,
+body.theme-switching *,
+body.theme-switching *::before,
+body.theme-switching *::after {
+  transition: none !important;
 }
 
 html,
@@ -412,7 +423,8 @@ h1 {
   background: var(--status-req-bg);
   color: var(--status-req-color);
   border-color: var(--status-req-border);
-  border-style: solid;
+  border-width: 1.5px;
+  border-style: dashed;
   opacity: 1;
   z-index: 3;
 }
@@ -425,7 +437,8 @@ h1 {
   background: var(--status-unlocks-bg);
   color: var(--status-unlocks-color);
   border-color: var(--status-unlocks-border);
-  border-style: solid;
+  border-width: 1.5px;
+  border-style: dashed;
   opacity: 1;
   z-index: 3;
 }
@@ -465,25 +478,6 @@ h1 {
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-tertiary);
   box-shadow: var(--shadow-sm);
-}
-
-/* Reset button */
-.reset-btn {
-  font-size: 11px;
-  color: var(--color-text-secondary);
-  background: var(--color-background-primary);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: var(--radius-sm);
-  padding: 4px 10px;
-  cursor: pointer;
-  margin-left: 12px;
-  vertical-align: middle;
-  transition: all var(--transition-fast);
-}
-
-.reset-btn:hover {
-  background: var(--neutral-100);
-  border-color: var(--color-border-primary);
 }
 
 @media (max-width: 640px) {
@@ -778,3 +772,128 @@ a.app-btn-danger.mat-mdc-button:hover,
   background: var(--color-background-primary);
   color: var(--color-text-primary);
 }
+
+/* ==========================================================================
+   Standardized 40px Material Toolbar & Header Controls
+   ========================================================================== */
+:root,
+html,
+body,
+[data-theme='dark'] {
+  --mat-sys-plain-font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    sans-serif;
+  --mat-sys-brand-font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    sans-serif;
+
+  /* Outlined Form Fields (Selects & Inputs) */
+  --mat-form-field-container-height: 40px;
+  --mat-form-field-container-vertical-padding: 8px;
+  --mat-form-field-container-text-size: 13px;
+  --mat-form-field-outlined-label-text-size: 13px;
+  --mdc-outlined-text-field-container-shape: var(--radius-md);
+  --mdc-outlined-text-field-outline-color: var(--color-border-secondary);
+  --mdc-outlined-text-field-hover-outline-color: var(--brand-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--brand-primary);
+  --mdc-outlined-text-field-input-text-color: var(--color-text-primary);
+  --mdc-outlined-text-field-label-text-color: var(--color-text-secondary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--brand-primary);
+
+  /* Select Trigger */
+  --mat-select-trigger-text-size: 13px;
+  --mat-select-trigger-text-weight: 500;
+  --mat-select-trigger-text-color: var(--color-text-primary);
+  --mat-select-enabled-arrow-color: var(--color-text-secondary);
+  --mat-select-focused-arrow-color: var(--brand-primary);
+  --mat-select-panel-background-color: var(--color-surface-card);
+  --mat-option-label-text-color: var(--color-text-primary);
+  --mat-option-label-text-size: 13px;
+
+  /* Segmented Button Toggle Group (38px inner + 2px border = 40px outer) */
+  --mat-button-toggle-height: 38px;
+  --mat-button-toggle-shape: var(--radius-md);
+  --mat-button-toggle-divider-color: var(--color-border-secondary);
+  --mat-button-toggle-text-color: var(--color-text-secondary);
+  --mat-button-toggle-state-layer-color: var(--brand-primary);
+  --mat-button-toggle-selected-state-background-color: var(--brand-primary-light);
+  --mat-button-toggle-selected-state-text-color: var(--brand-primary);
+  --mat-button-toggle-label-text-size: 13px;
+  --mat-button-toggle-label-text-weight: 600;
+  --mat-standard-button-toggle-height: 38px;
+  --mat-standard-button-toggle-shape: var(--radius-md);
+  --mat-standard-button-toggle-divider-color: var(--color-border-secondary);
+  --mat-standard-button-toggle-text-color: var(--color-text-secondary);
+  --mat-standard-button-toggle-state-layer-color: var(--brand-primary);
+  --mat-standard-button-toggle-selected-state-background-color: var(--brand-primary-light);
+  --mat-standard-button-toggle-selected-state-text-color: var(--brand-primary);
+  --mat-standard-button-toggle-label-text-size: 13px;
+  --mat-standard-button-toggle-label-text-weight: 600;
+
+  /* Action Buttons (Filled & Outlined) */
+  --mat-button-filled-container-height: 40px;
+  --mat-button-filled-container-shape: var(--radius-md);
+  --mat-button-filled-container-color: var(--btn-primary-bg);
+  --mat-button-filled-label-text-color: var(--btn-primary-text);
+  --mat-button-filled-label-text-size: 13px;
+  --mat-button-filled-label-text-weight: 600;
+
+  --mat-button-outlined-container-height: 40px;
+  --mat-button-outlined-container-shape: var(--radius-md);
+  --mat-button-outlined-outline-color: var(--color-border-secondary);
+  --mat-button-outlined-label-text-color: var(--color-text-primary);
+  --mat-button-outlined-label-text-size: 13px;
+  --mat-button-outlined-label-text-weight: 600;
+
+  --mat-button-text-container-height: 40px;
+  --mat-button-text-container-shape: var(--radius-md);
+  --mat-button-text-label-text-size: 13px;
+  --mat-button-text-label-text-weight: 600;
+}
+
+/* Ensure M3 notched-outline corners match 10px radius cleanly */
+.mat-mdc-form-field .mdc-notched-outline__leading {
+  border-top-left-radius: var(--radius-md) !important;
+  border-bottom-left-radius: var(--radius-md) !important;
+  width: 12px !important;
+}
+
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+  border-top-right-radius: var(--radius-md) !important;
+  border-bottom-right-radius: var(--radius-md) !important;
+}
+
+/* Vertically center floating label when collapsed in 40px field */
+.mat-mdc-form-field-infix {
+  min-height: 40px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Standardize mat-button-toggle-group border & active icon color */
+mat-button-toggle-group.mat-button-toggle-group-appearance-standard {
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border-secondary) !important;
+  border-radius: var(--radius-md) !important;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+mat-button-toggle-group.mat-button-toggle-group-appearance-standard .mat-button-toggle-label-content {
+  line-height: 38px !important;
+  padding: 0 12px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+mat-button-toggle-group.mat-button-toggle-group-appearance-standard .mat-button-toggle-checked {
+  background-color: var(--brand-primary-light) !important;
+  color: var(--brand-primary) !important;
+}
+
+mat-button-toggle-group.mat-button-toggle-group-appearance-standard .mat-button-toggle-checked .mat-button-toggle-button,
+mat-button-toggle-group.mat-button-toggle-group-appearance-standard .mat-button-toggle-checked mat-icon {
+  color: var(--brand-primary) !important;
+}
+
